@@ -2,11 +2,23 @@
 
 A simple go framework for development
 
-> This framework could be copy to create a new project as a template. And you can also copy the "src/base" library to use it in your project independently.
+> This framework could be easliy copy & create a new project as a project template. And you can also sync the "src/base" libraries to another project by using build-in command line tools.
+
+## Features
+
+* Full Stack. Use Makefile as development & build command line tools, across platform support.
+
+* NOT only for WEB but for ALL. Proper framework offers the advantage of being extremely scalable.
+
+* Operational Friendly. Could be simply configured in different environments, such as local, test, release ...
+
+* Rich Components Support. Provides GDO (GO Database OOP Libs), GMO (Go MQ OOP Libs), GCACHE (Go Cache OOP Libs), and also support Etcd, Protobuf ...
+
+* Simple to Start. EASY to use, EASY to expand Libs. EASY to copy & create new project. EASY to sync codes between projects.
 
 ## Installing
 
-**Set system env**
+**Set system ENV (Linux & Mac)**
 
 ```
 vi ~/.bash_profile
