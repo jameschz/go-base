@@ -1,0 +1,7 @@
+# app configs
+server:
+  http:
+    addr: "0.0.0.0:80"
+  socket:
+    addr: "0.0.0.0:8080"
+

@@ -1,0 +1,26 @@
+# drivers
+drivers:
+  default:
+    type: redis
+    algo: hash # rand|hash
+    nodes:
+    - 127.0.0.1:6379
+    - 127.0.0.1:6379
+  rank:
+    type: rank
+    algo: hash
+    nodes:
+    - 127.0.0.1:6379
+
+# regions
+regions:
+  user:
+    name: user
+    driver: default
+    desc: "user cache"
+    ttl: 60 * 60 * 24
+  rank:
+    name: rank
+    driver: rank
+    desc: "rank cache"
+    ttl: 60 * 60 * 24

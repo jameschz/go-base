@@ -1,0 +1,11 @@
+bin/
+log/
+pkg/
+vendor/
+
+.env
+*.log
+*.swp
+.project
+.settings/
+.idea/

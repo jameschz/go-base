@@ -1,0 +1,8 @@
+# etcd configs
+# notice: cluster needs at least three endpoints
+config:
+  timeout: 5
+  endpoints:
+  - 127.0.0.1:2379
+  - 127.0.0.1:2379
+  - 127.0.0.1:2379
