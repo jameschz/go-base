@@ -23,7 +23,6 @@ A simple go framework for development
 ```
 vi ~/.bash_profile
 ...
-export GOPATH=/path/to/go-base:...
 export GO_BASE_ENV=[local|test|...|release]
 export GO_BASE_ROOT=/path/to/go-base
 ...
@@ -34,7 +33,9 @@ export GO_BASE_ROOT=/path/to/go-base
 ```
 git clone http://192.168.1.201:8888/go/go-base.git
 cd go-base
-make
+go mod download
+make # Build in Linux & Mac
+build.bat # Build in Windows
 bin/go-base
 ...
 ============================================
