@@ -1,0 +1,1 @@
+go.exe build -o bin/go-base.exe

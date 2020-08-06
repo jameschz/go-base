@@ -1,11 +1,14 @@
-bin/
-log/
 pkg/
 vendor/
+
+bin/*
+log/*
+!.gitkeep
 
 .env
 *.log
 *.swp
 .project
 .settings/
+.vscode/
 .idea/

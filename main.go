@@ -1,19 +1,20 @@
 package main
 
 import (
-	"base/config"
-	"base/example/etcdclient"
-	"base/example/gcacheclient"
-	"base/example/gdoclient"
-	"base/example/gmqclient"
-	"base/example/httpserver"
-	"base/example/socketclient"
-	"base/example/socketserver"
-	"base/logger"
-	"base/util"
 	"fmt"
 	"net/http"
 	"os"
+
+	"go-base/lib/config"
+	"go-base/lib/example/etcdclient"
+	"go-base/lib/example/gcacheclient"
+	"go-base/lib/example/gdoclient"
+	"go-base/lib/example/gmqclient"
+	"go-base/lib/example/httpserver"
+	"go-base/lib/example/socketclient"
+	"go-base/lib/example/socketserver"
+	"go-base/lib/logger"
+	"go-base/lib/util"
 )
 
 func help() {
