@@ -1,4 +1,4 @@
-module github.com/jameschz/go-base/
+module github.com/jameschz/go-base
 
 go 1.14
 
