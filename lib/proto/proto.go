@@ -1,7 +1,6 @@
 package proto
 
 import (
-	"bytes"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -68,76 +67,6 @@ func ReadMessage(conn net.Conn, buf []byte, msg Message) (err error) {
 	}
 	// protobuf unpack msg
 	if err = proto_base.Unmarshal(buf[:pkgLen], msg); err != nil {
-		return err
-	}
-	return nil
-}
-
-// SendPBC : send pbc message to conn
-func SendPBC(conn net.Conn, msg Message) (err error) {
-	var (
-		msgBuf    []byte
-		msgLen    []byte
-		pStatus   []byte
-		pType     []byte
-		sendLen   []byte
-		sendBytes []byte
-		readLen   int
-	)
-	// protobuf pack msg
-	if msgBuf, err = proto_base.Marshal(msg); err != nil {
-		return err
-	}
-	// set msg status
-	pStatus = make([]byte, 2)
-	binary.LittleEndian.PutUint16(pStatus, uint16(104))
-	// set msg type
-	pType = make([]byte, 2)
-	binary.LittleEndian.PutUint16(pType, uint16(2))
-	// set msg length
-	msgLen = make([]byte, 4)
-	binary.LittleEndian.PutUint16(msgLen, uint16(len(msgBuf)))
-	// set send length
-	sendLen = make([]byte, 2)
-	binary.LittleEndian.PutUint16(sendLen, uint16(len(msgBuf)+8))
-	// build msg bytes
-	sendBytes = bytes.Join([][]byte{sendLen, pStatus, pType, msgLen, msgBuf}, []byte{})
-	fmt.Println("> proto.SendPBC : sendBytes ========== ", sendBytes)
-	// send msg data
-	if readLen, err = conn.Write(sendBytes); err != nil {
-		if readLen == 0 {
-			return errors.New("proto.SendPBC write error")
-		}
-		return err
-	}
-	return nil
-}
-
-// ReadPBC : read pbc message from conn to buf
-func ReadPBC(conn net.Conn, buf []byte, msg Message) (err error) {
-	var (
-		pStatus   uint16
-		pType     uint16
-		pLen      uint32
-		readLen   int
-		readBytes []byte
-	)
-	// read msg length
-	if readLen, err = conn.Read(buf); err != nil {
-		return errors.New("proto.SendPBC read error")
-	}
-	if readLen <= 10 {
-		return errors.New("proto.SendPBC msg length error")
-	}
-	readBytes = buf[:readLen]
-	fmt.Println("> proto.ReadPBC : readBytes ========== ", readBytes)
-	// get msg len
-	pStatus = binary.LittleEndian.Uint16(readBytes[2:4])
-	pType = binary.LittleEndian.Uint16(readBytes[4:6])
-	pLen = binary.LittleEndian.Uint32(readBytes[6:10])
-	fmt.Println("> proto.ReadPBC : readVars ========== ", readLen, pStatus, pType, pLen)
-	// protobuf unpack msg (escape 6 bytes for PBC)
-	if err = proto_base.Unmarshal(readBytes[10:readLen], msg); err != nil {
 		return err
 	}
 	return nil
