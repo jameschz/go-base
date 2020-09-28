@@ -41,22 +41,22 @@ bin/go-base
 ============================================
 > rootpath /data/code/go-base
 ============================================
- base server : http server
- base so_server : socket server
- base so_client : socket client
- base gdo_query : gdo query test
- base gdo_insert : gdo insert test
- base gdo_update : gdo update test
- base gdo_delete : gdo delete test
- base gdo_tx_basic : gdo transaction test
- base gcache_all : gcache all tests
- base gmq_pub : gmq publish test
- base gmq_sub : gmq comsume test
- base etcd_ka : etcd keepalive test
- base etcd_sync : etcd sync trans test
+ base http_server : example http server
+ base so_server : example socket server
+ base so_client : example socket client
+ base gdo_query : example gdo query test
+ base gdo_insert : example gdo insert test
+ base gdo_update : example gdo update test
+ base gdo_delete : example gdo delete test
+ base gdo_tx_basic : example gdo transaction test
+ base gcache_all : example gcache all tests
+ base gmq_pub : example gmq publish test
+ base gmq_sub : example gmq comsume test
+ base etcd_ka : example etcd keepalive test
+ base etcd_sync : example etcd sync trans test
 ============================================
 ...
-bin/go-base server
+bin/go-base http_server
 ...
 > base http server
 > listening on 0.0.0.0:80 ...
@@ -93,7 +93,6 @@ src/base/gdo|db package, support : mysql ...
 src/base/etcd|etcd support package
 src/base/proto|protobuf base package
 src/base/example|examples package
-vendor/|third-party packages, used only in make process
 
 
 **How to start new project**
@@ -142,30 +141,30 @@ git status
 
 > Main examples console, including the example how to use config library.
 
-**src/base/example/gdoclient/base.go**
+**lib/example/gdoclient/example_gdoclient.go**
 
 > Including db CRUD function examples, now support mysql, keep upgrading.
 
-**src/base/example/gmqclient/base.go**
+**lib/example/gmqclient/example_gmqclient.go**
 
 > Including message queue basic examples, now support rabbitmq, keep upgrading.
 
-**src/base/example/gcacheclient/base.go**
+**lib/example/gcacheclient/example_gcacheclient.go**
 
 > Including cache basic examples, now support redis, keep upgrading.
 
-**src/base/example/etcdclient/base.go**
+**lib/example/etcdclient/example_etcdclient.go**
 
 > Including etcd basic examples, keep upgrading.
 
-**src/base/example/socketserver/base.go**
+**lib/example/socketserver/example_socketserver.go**
 
 > A simple socket server demo, including heartbeating implemention and how to use logger library.
 
-**src/base/example/socketclient/base.go**
+**lib/example/socketclient/example_socketclient.go**
 
 > A simple socket client demo, including heartbeating implemention.
 
-**src/base/example/httpserver.go**
+**lib/example/httpserver/example_httpserver.go**
 
 > A simple http server demo.
