@@ -30,6 +30,8 @@ type IDb interface {
 	Query(sql string, params ...interface{}) (rows *sql.Rows, err error)
 	Exec(sql string, params ...interface{}) (res sql.Result, err error)
 	Select(field string, where string, params ...interface{}) (rows *sql.Rows, err error)
+	FetchAll(rows *sql.Rows, data interface{}) (res *[]interface{}, err error)
+	FetchRow(rows *sql.Rows, data interface{}) (res interface{}, err error)
 	Insert(sql string, params ...interface{}) (id int64, err error)
 	Update(sql string, params ...interface{}) (affect int64, err error)
 	Delete(where string, params ...interface{}) (affect int64, err error)

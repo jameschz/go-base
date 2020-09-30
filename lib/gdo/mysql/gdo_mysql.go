@@ -5,6 +5,7 @@ import (
 	"github.com/jameschz/go-base/lib/gdo/base"
 	"github.com/jameschz/go-base/lib/gdo/driver"
 	"github.com/jameschz/go-base/lib/gdo/parser"
+	"reflect"
 
 	// import mysql lib
 	_ "github.com/go-sql-driver/mysql"
@@ -216,6 +217,44 @@ func (db *Mysql) Select(field string, where string, params ...interface{}) (rows
 		return nil, err
 	}
 	return rows, nil
+}
+
+// FetchAll :
+func (db *Mysql) FetchAll(rows *sql.Rows, data interface{}) (*[]interface{}, error) {
+	var err error
+	res := make([]interface{}, 0)
+	stu := reflect.ValueOf(data).Elem()
+	len := stu.NumField()
+	col := make([]interface{}, len)
+	for i := 0; i < len; i++ {
+		col[i] = stu.Field(i).Addr().Interface()
+	}
+	for rows.Next() {
+		err = rows.Scan(col...)
+		if err != nil {
+			break
+		}
+		// fetch all rows
+		res = append(res, stu.Interface())
+	}
+	return &res, err
+}
+
+// FetchRow :
+func (db *Mysql) FetchRow(rows *sql.Rows, data interface{}) (interface{}, error) {
+	var err error
+	stu := reflect.ValueOf(data).Elem()
+	len := stu.NumField()
+	col := make([]interface{}, len)
+	for i := 0; i < len; i++ {
+		col[i] = stu.Field(i).Addr().Interface()
+	}
+	for rows.Next() {
+		err = rows.Scan(col...)
+		// fetch one row
+		break
+	}
+	return stu.Interface(), err
 }
 
 // Insert :

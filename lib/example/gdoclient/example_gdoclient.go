@@ -13,20 +13,38 @@ func MysqlQueryBasic() {
 	// init by driver
 	db := gdo.D("demo")
 	defer db.Close()
+	// init result struct
+	type story struct {
+		ID      int
+		Title   string
+		Content string
+		Dtime   string
+	}
 	// test select
-	rows, err := db.T("story").Select("*", "1=1")
+	rows, err := db.T("story").Select("id,title,content,dtime", "1=1")
 	if err != nil {
 		fmt.Println("> mysql query basic err", err)
 	} else {
-		for rows.Next() {
-			var id string
-			var title string
-			var content string
-			var time string
-			rows.Scan(&id, &title, &content, &time)
-			fmt.Println("> mysql query basic [id]", id, "[title]", title, "[content]", content, "[time]", time)
-		}
+		stu1 := &story{}
+		res1, _ := db.T("story").FetchRow(rows, stu1)
+		fmt.Println("> mysql query basic : FetchRow")
+		util.Dump(res1.(story))
+		rows.Close()
 	}
+	// test select
+	rows, err = db.T("story").Select("id,title,content,dtime", "1=1")
+	if err != nil {
+		fmt.Println("> mysql query basic err", err)
+	} else {
+		stu2 := &story{}
+		res2, _ := db.T("story").FetchAll(rows, stu2)
+		for k, v := range *res2 {
+			fmt.Println("> mysql query basic : FetchAll", k)
+			util.Dump(v.(story))
+		}
+		rows.Close()
+	}
+
 }
 
 // MysqlInsertBasic :
