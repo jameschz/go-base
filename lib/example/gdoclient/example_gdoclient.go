@@ -20,28 +20,47 @@ func MysqlQueryBasic() {
 		Content string
 		Dtime   string
 	}
-	// test select
+	// test FetchMaps
 	rows, err := db.T("story").Select("id,title,content,dtime", "1=1")
 	if err != nil {
 		fmt.Println("> mysql query basic err", err)
 	} else {
-		res1, _ := db.T("story").RowsToMap(rows)
-		for k, v := range *res1 {
-			fmt.Println("> mysql query basic : RowsToMap", k)
+		r, _ := db.T("story").FetchMaps(rows)
+		for k, v := range *r {
+			fmt.Println("> mysql query basic : FetchMaps - id :", k)
 			util.Dump(v)
 		}
 	}
-	// test select
+	// test FetchMap
 	rows, err = db.T("story").Select("id,title,content,dtime", "1=1")
 	if err != nil {
 		fmt.Println("> mysql query basic err", err)
 	} else {
-		stu2 := &story{}
-		res2, _ := db.T("story").RowsToStruct(rows, stu2)
-		for k, v := range *res2 {
-			fmt.Println("> mysql query basic : RowsToStruct", k)
+		r, _ := db.T("story").FetchMap(rows)
+		fmt.Println("> mysql query basic : FetchMap")
+		util.Dump(r)
+	}
+	// test FetchStructs
+	rows, err = db.T("story").Select("id,title,content,dtime", "1=1")
+	if err != nil {
+		fmt.Println("> mysql query basic err", err)
+	} else {
+		s := &story{}
+		r, _ := db.T("story").FetchStructs(rows, s)
+		for k, v := range *r {
+			fmt.Println("> mysql query basic : FetchStructs - id :", k)
 			util.Dump(v.(story))
 		}
+	}
+	// test FetchStruct
+	rows, err = db.T("story").Select("id,title,content,dtime", "1=1")
+	if err != nil {
+		fmt.Println("> mysql query basic err", err)
+	} else {
+		s := &story{}
+		r, _ := db.T("story").FetchStruct(rows, s)
+		fmt.Println("> mysql query basic : FetchStruct")
+		util.Dump(r.(story))
 	}
 }
 

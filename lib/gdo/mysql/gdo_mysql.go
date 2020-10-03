@@ -218,8 +218,8 @@ func (db *Mysql) Select(field string, where string, params ...interface{}) (rows
 	return rows, nil
 }
 
-// RowsToStruct :
-func (db *Mysql) RowsToStruct(rows *sql.Rows, data interface{}) (*[]interface{}, error) {
+// FetchStructs :
+func (db *Mysql) FetchStructs(rows *sql.Rows, data interface{}) (*[]interface{}, error) {
 	var err error
 	stu := reflect.ValueOf(data).Elem()
 	len := stu.NumField()
@@ -243,8 +243,17 @@ func (db *Mysql) RowsToStruct(rows *sql.Rows, data interface{}) (*[]interface{},
 	return &list, err
 }
 
-// RowsToMap :
-func (db *Mysql) RowsToMap(rows *sql.Rows) (*[]map[string]interface{}, error) {
+// FetchStruct :
+func (db *Mysql) FetchStruct(rows *sql.Rows, data interface{}) (interface{}, error) {
+	res, err := db.FetchStructs(rows, data)
+	for _, v := range *res {
+		return v, err
+	}
+	return nil, nil
+}
+
+// FetchMaps :
+func (db *Mysql) FetchMaps(rows *sql.Rows) (*[]map[string]interface{}, error) {
 	var err error
 	// init cols cache
 	columns, _ := rows.Columns()
@@ -284,7 +293,15 @@ func (db *Mysql) RowsToMap(rows *sql.Rows) (*[]map[string]interface{}, error) {
 	_ = rows.Close()
 	// return list
 	return &list, err
+}
 
+// FetchMap :
+func (db *Mysql) FetchMap(rows *sql.Rows) (map[string]interface{}, error) {
+	res, err := db.FetchMaps(rows)
+	for _, v := range *res {
+		return v, err
+	}
+	return nil, nil
 }
 
 // Insert :
