@@ -6,7 +6,6 @@ import (
 	"github.com/jameschz/go-base/lib/gdo/driver"
 	"github.com/jameschz/go-base/lib/gdo/parser"
 	"reflect"
-
 	// import mysql lib
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -219,42 +218,73 @@ func (db *Mysql) Select(field string, where string, params ...interface{}) (rows
 	return rows, nil
 }
 
-// FetchAll :
-func (db *Mysql) FetchAll(rows *sql.Rows, data interface{}) (*[]interface{}, error) {
+// RowsToStruct :
+func (db *Mysql) RowsToStruct(rows *sql.Rows, data interface{}) (*[]interface{}, error) {
 	var err error
-	res := make([]interface{}, 0)
 	stu := reflect.ValueOf(data).Elem()
 	len := stu.NumField()
-	col := make([]interface{}, len)
+	list := make([]interface{}, 0)
+	cols := make([]interface{}, len)
 	for i := 0; i < len; i++ {
-		col[i] = stu.Field(i).Addr().Interface()
+		cols[i] = stu.Field(i).Addr().Interface()
 	}
+	// scan all rows into cols
 	for rows.Next() {
-		err = rows.Scan(col...)
+		err = rows.Scan(cols...)
 		if err != nil {
 			break
 		}
-		// fetch all rows
-		res = append(res, stu.Interface())
+		// add item into list
+		list = append(list, stu.Interface())
 	}
-	return &res, err
+	// close rows
+	_ = rows.Close()
+	// return list
+	return &list, err
 }
 
-// FetchRow :
-func (db *Mysql) FetchRow(rows *sql.Rows, data interface{}) (interface{}, error) {
+// RowsToMap :
+func (db *Mysql) RowsToMap(rows *sql.Rows) (*[]map[string]interface{}, error) {
 	var err error
-	stu := reflect.ValueOf(data).Elem()
-	len := stu.NumField()
-	col := make([]interface{}, len)
-	for i := 0; i < len; i++ {
-		col[i] = stu.Field(i).Addr().Interface()
+	// init cols cache
+	columns, _ := rows.Columns()
+	columnLen := len(columns)
+	cols := make([]interface{}, columnLen)
+	for i := range cols {
+		var a interface{}
+		cols[i] = &a
 	}
+	var list []map[string]interface{}
+	// scan all rows into cols
 	for rows.Next() {
-		err = rows.Scan(col...)
-		// fetch one row
-		break
+		err = rows.Scan(cols...)
+		if err != nil {
+			break
+		}
+		// build item data
+		item := make(map[string]interface{})
+		for i, v := range cols {
+			c := *v.(*interface{})
+			switch c.(type) {
+			case []uint8:
+				item[columns[i]] = string(c.([]uint8))
+				break
+			case nil:
+				item[columns[i]] = ""
+				break
+			default:
+				item[columns[i]] = c
+				break
+			}
+		}
+		// add item into list
+		list = append(list, item)
 	}
-	return stu.Interface(), err
+	// close rows
+	_ = rows.Close()
+	// return list
+	return &list, err
+
 }
 
 // Insert :

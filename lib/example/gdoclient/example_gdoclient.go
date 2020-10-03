@@ -25,11 +25,11 @@ func MysqlQueryBasic() {
 	if err != nil {
 		fmt.Println("> mysql query basic err", err)
 	} else {
-		stu1 := &story{}
-		res1, _ := db.T("story").FetchRow(rows, stu1)
-		fmt.Println("> mysql query basic : FetchRow")
-		util.Dump(res1.(story))
-		rows.Close()
+		res1, _ := db.T("story").RowsToMap(rows)
+		for k, v := range *res1 {
+			fmt.Println("> mysql query basic : RowsToMap", k)
+			util.Dump(v)
+		}
 	}
 	// test select
 	rows, err = db.T("story").Select("id,title,content,dtime", "1=1")
@@ -37,14 +37,12 @@ func MysqlQueryBasic() {
 		fmt.Println("> mysql query basic err", err)
 	} else {
 		stu2 := &story{}
-		res2, _ := db.T("story").FetchAll(rows, stu2)
+		res2, _ := db.T("story").RowsToStruct(rows, stu2)
 		for k, v := range *res2 {
-			fmt.Println("> mysql query basic : FetchAll", k)
+			fmt.Println("> mysql query basic : RowsToStruct", k)
 			util.Dump(v.(story))
 		}
-		rows.Close()
 	}
-
 }
 
 // MysqlInsertBasic :
