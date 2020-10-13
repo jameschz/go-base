@@ -39,7 +39,7 @@ func createDataSource(driver *gcachedriver.Driver, node string) *gcachebase.Data
 		})
 	}
 	// for debug
-	debugPrint("createDataSource", ds)
+	debugPrint("gcachepool.createDataSource", ds)
 	return ds
 }
 
@@ -50,7 +50,7 @@ func releaseDataSource(ds *gcachebase.DataSource) {
 		ds = nil
 	}
 	// for debug
-	debugPrint("releaseDataSource", ds)
+	debugPrint("gcachepool.releaseDataSource", ds)
 }
 
 // private
@@ -86,7 +86,7 @@ func Init() (err error) {
 		}
 	}
 	// for debug
-	debugPrint("Init", _cPoolIdle, _cPoolActive)
+	debugPrint("gcachepool.Init", _cPoolIdle, _cPoolActive)
 	// init ok status
 	if err == nil {
 		_cPoolInit = true
@@ -115,7 +115,7 @@ func Fetch(cName string, cNode string) (ds *gcachebase.DataSource, err error) {
 			_cPoolIdle[cKey].Push(createDataSource(cDriver, cNode))
 		}
 		// for debug
-		debugPrint("Fetch add", _cPoolIdle[cKey].Len(), _cPoolActive[cKey].Len())
+		debugPrint("gcachepool.Fetch Add", _cPoolIdle[cKey].Len(), _cPoolActive[cKey].Len())
 	}
 	// fetch from front
 	if _cPoolIdle[cKey].Len() >= 1 {
@@ -125,7 +125,7 @@ func Fetch(cName string, cNode string) (ds *gcachebase.DataSource, err error) {
 		return nil, errors.New("gcachepool : no enough ds")
 	}
 	// for debug
-	debugPrint("Fetch", _cPoolIdle[cKey].Len(), _cPoolActive[cKey].Len())
+	debugPrint("gcachepool.Fetch", _cPoolIdle[cKey].Len(), _cPoolActive[cKey].Len())
 	// fetch end >>> unlock
 	_cPoolLock.Unlock()
 	// return ds 0
@@ -152,6 +152,6 @@ func Return(ds *gcachebase.DataSource) (err error) {
 	// return end >>> unlock
 	_cPoolLock.Unlock()
 	// for debug
-	debugPrint("Return", _cPoolIdle[cKey].Len(), _cPoolActive[cKey].Len())
+	debugPrint("gcachepool.Return", _cPoolIdle[cKey].Len(), _cPoolActive[cKey].Len())
 	return err
 }

@@ -90,7 +90,8 @@ src/base/logger|logger package
 src/base/gcache|cache package, support : redis ...
 src/base/gmq|mq package, support : rabbitmq ...
 src/base/gdo|db package, support : mysql ...
-src/base/etcd|etcd support package
+src/base/getcd|etcd support package
+src/base/gutil|utils functions
 src/base/proto|protobuf base package
 src/base/example|examples package
 

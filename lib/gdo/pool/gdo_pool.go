@@ -50,7 +50,7 @@ func createDataSource(driver *gdodriver.Driver) *gdobase.DataSource {
 		ds.Conn = dbc
 	}
 	// for debug
-	debugPrint("createDataSource", ds)
+	debugPrint("gdopool.createDataSource", ds)
 	return ds
 }
 
@@ -61,7 +61,7 @@ func releaseDataSource(ds *gdobase.DataSource) {
 		ds = nil
 	}
 	// for debug
-	debugPrint("releaseDataSource", ds)
+	debugPrint("gdopool.releaseDataSource", ds)
 }
 
 // SetDebug : public
@@ -89,7 +89,7 @@ func Init() (err error) {
 		}
 	}
 	// for debug
-	debugPrint("Init", _dbPoolIdle, _dbPoolActive)
+	debugPrint("gdopool.Init", _dbPoolIdle, _dbPoolActive)
 	// init ok status
 	if err == nil {
 		_dbPoolInit = true
@@ -116,7 +116,7 @@ func Fetch(dbName string) (ds *gdobase.DataSource, err error) {
 			_dbPoolIdle[dbName].Push(createDataSource(dbDriver))
 		}
 		// for debug
-		debugPrint("Fetch add", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
+		debugPrint("gdopool.Fetch Add", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
 	}
 	// fetch from front
 	if _dbPoolIdle[dbName].Len() >= 1 {
@@ -126,7 +126,7 @@ func Fetch(dbName string) (ds *gdobase.DataSource, err error) {
 		return nil, errors.New("gdopool : no enough ds")
 	}
 	// for debug
-	debugPrint("Fetch", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
+	debugPrint("gdopool.Fetch", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
 	// fetch end >>> unlock
 	_dbPoolLock.Unlock()
 	// return ds 0
@@ -153,6 +153,6 @@ func Return(ds *gdobase.DataSource) (err error) {
 	// return end >>> unlock
 	_dbPoolLock.Unlock()
 	// for debug
-	debugPrint("Return", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
+	debugPrint("gdopool.Return", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
 	return err
 }

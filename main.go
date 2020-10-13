@@ -9,9 +9,9 @@ import (
 	"github.com/jameschz/go-base/lib/gutil"
 
 	// -- example code start
-	exampleetcdclient "github.com/jameschz/go-base/lib/example/etcdclient"
 	examplegcacheclient "github.com/jameschz/go-base/lib/example/gcacheclient"
 	examplegdoclient "github.com/jameschz/go-base/lib/example/gdoclient"
+	examplegetcdclient "github.com/jameschz/go-base/lib/example/getcdclient"
 	examplegmqclient "github.com/jameschz/go-base/lib/example/gmqclient"
 	examplehttpserver "github.com/jameschz/go-base/lib/example/httpserver"
 	examplesocketclient "github.com/jameschz/go-base/lib/example/socketclient"
@@ -122,11 +122,11 @@ func main() {
 		}
 	case "etcd_ka":
 		{
-			exampleetcdclient.TestKA()
+			examplegetcdclient.TestKA()
 		}
 	case "etcd_sync":
 		{
-			exampleetcdclient.TestSync()
+			examplegetcdclient.TestSync()
 		}
 	// -- example code end
 	default:

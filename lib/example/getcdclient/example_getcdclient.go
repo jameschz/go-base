@@ -1,4 +1,4 @@
-package exampleetcdclient
+package examplegetcdclient
 
 import (
 	"fmt"
