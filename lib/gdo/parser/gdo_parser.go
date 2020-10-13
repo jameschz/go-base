@@ -46,7 +46,7 @@ func GetSeqIDPos(sql string, seqID string) int {
 	//case Delete:
 	default:
 		rs = regexp.MustCompile(`([^\s,]+)=([^\s,=]+)`).FindAllStringSubmatch(sql, -1)
-		//util.Dump(rs)
+		//gutil.Dump(rs)
 	}
 	if len(rs) > 0 {
 		for k, v := range rs {

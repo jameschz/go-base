@@ -1,3 +1,10 @@
+ # pool configs
+_pool: &_pool
+  pool_init_size: 5
+  pool_max_active: 10
+  pool_max_idle: 5
+  pool_min_idle: 0
+
 # database configs
 _base: &_base
   type: "mysql"
@@ -6,6 +13,7 @@ _base: &_base
   user: "root"
   pass: "passwd"
   charset: "utf8"
+  <<: *_pool
 
 # db drivers list
 drivers:

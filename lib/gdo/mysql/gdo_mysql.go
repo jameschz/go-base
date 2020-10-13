@@ -2,10 +2,13 @@ package gdomysql
 
 import (
 	"database/sql"
-	"github.com/jameschz/go-base/lib/gdo/base"
-	"github.com/jameschz/go-base/lib/gdo/driver"
-	"github.com/jameschz/go-base/lib/gdo/parser"
 	"reflect"
+
+	gdobase "github.com/jameschz/go-base/lib/gdo/base"
+	gdodriver "github.com/jameschz/go-base/lib/gdo/driver"
+	gdoparser "github.com/jameschz/go-base/lib/gdo/parser"
+	gdopool "github.com/jameschz/go-base/lib/gdo/pool"
+
 	// import mysql lib
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -37,27 +40,30 @@ func (db *Mysql) CleanTable() *Mysql {
 
 // Connect :
 func (db *Mysql) Connect(driver *gdodriver.Driver) error {
-	// open connection
-	db.Driver = driver
-	db.TableName = ""
-	dsn := driver.User + ":" +
-		driver.Pass + "@tcp(" +
-		driver.Host + ":" +
-		driver.Port + ")/" +
-		driver.DbName + "?charset=" +
-		driver.Charset
-	conn, err := sql.Open("mysql", dsn)
-	if err != nil {
+	// connect once
+	if db.Conn == nil {
+		// gdopool
+		gdopool.Init()
+		dataSource, err := gdopool.Fetch(driver.DbName)
+		// init db vars
+		db.Driver = driver
+		db.DataSource = dataSource
+		db.Conn = dataSource.Conn
+		db.TableName = ""
 		return err
 	}
-	db.Conn = conn
 	return nil
 }
 
 // Close :
 func (db *Mysql) Close() error {
+	// close once
 	if db.Conn != nil {
-		return db.Conn.Close()
+		err := gdopool.Return(db.DataSource)
+		db.DataSource = nil
+		db.Conn = nil
+		db.Tx = nil
+		return err
 	}
 	return nil
 }

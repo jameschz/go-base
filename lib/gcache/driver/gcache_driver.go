@@ -1,17 +1,25 @@
 package gcachedriver
 
 import (
-	"github.com/jameschz/go-base/lib/config"
 	"hash/crc32"
 	"math/rand"
 	"time"
+
+	"github.com/jameschz/go-base/lib/config"
 )
 
 // Driver :
 type Driver struct {
 	Type  string
+	Name  string
 	Algo  string
 	Nodes []string
+	// pool attrs start
+	PoolInitSize  int
+	PoolMaxActive int
+	PoolMaxIdle   int
+	PoolMinIdle   int
+	// pool attrs end
 }
 
 var (
@@ -37,8 +45,15 @@ func Init() bool {
 		// check driver
 		driver := &Driver{
 			Type:  _cDriver["type"].(string),
+			Name:  _cDriver["name"].(string),
 			Algo:  _cDriver["algo"].(string),
 			Nodes: _cNodes,
+			// pool attrs start
+			PoolInitSize:  _cDriver["pool_init_size"].(int),
+			PoolMaxActive: _cDriver["pool_max_active"].(int),
+			PoolMaxIdle:   _cDriver["pool_max_idle"].(int),
+			PoolMinIdle:   _cDriver["pool_min_idle"].(int),
+			// pool attrs end
 		}
 		// check driver
 		if len(driver.Algo) == 0 ||
@@ -58,6 +73,11 @@ func GetDriver(ds string) (driver *Driver) {
 	}
 	driver = _cDrivers[ds]
 	return driver
+}
+
+// GetDrivers :
+func GetDrivers() map[string]*Driver {
+	return _cDrivers
 }
 
 // GetShardNode :

@@ -2,18 +2,27 @@ package gdobase
 
 import (
 	"database/sql"
-	"github.com/jameschz/go-base/lib/gdo/cluster"
-	"github.com/jameschz/go-base/lib/gdo/driver"
+
+	gdocluster "github.com/jameschz/go-base/lib/gdo/cluster"
+	gdodriver "github.com/jameschz/go-base/lib/gdo/driver"
 )
+
+// DataSource :
+type DataSource struct {
+	ID   string
+	Name string
+	Conn *sql.DB
+}
 
 // Db :
 type Db struct {
-	Driver    *gdodriver.Driver   // driver
-	Cluster   *gdocluster.Cluster // cluster
-	Conn      *sql.DB             // connection
-	Tx        *sql.Tx             // transaction
-	TableName string              // table name
-	TxBegin   bool                // begin tx
+	Driver     *gdodriver.Driver   // driver
+	Cluster    *gdocluster.Cluster // cluster
+	DataSource *DataSource         // datasource
+	Conn       *sql.DB             // db connection
+	Tx         *sql.Tx             // transaction
+	TxBegin    bool                // begin tx
+	TableName  string              // table name
 }
 
 // IDb :

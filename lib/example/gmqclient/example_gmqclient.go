@@ -2,7 +2,7 @@ package examplegmqclient
 
 import (
 	"github.com/jameschz/go-base/lib/gmq"
-	"github.com/jameschz/go-base/lib/util"
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 // RabbitPub :
@@ -20,9 +20,9 @@ func RabbitSub() {
 	// comsume from queue default
 	rmq.Consume("default", func(done chan bool, body []byte) {
 		// print messages from queue
-		util.Dump("done status:", done)
-		util.Dump("msg body bytes:", body)
-		util.Dump("msg body string:", string(body))
+		gutil.Dump("done status:", done)
+		gutil.Dump("msg body bytes:", body)
+		gutil.Dump("msg body string:", string(body))
 		// quiting the loop
 		done <- true
 	})

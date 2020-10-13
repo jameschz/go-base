@@ -1,10 +1,10 @@
 package gcache
 
 import (
-	"github.com/jameschz/go-base/lib/gcache/base"
-	"github.com/jameschz/go-base/lib/gcache/driver"
-	"github.com/jameschz/go-base/lib/gcache/redis"
-	"github.com/jameschz/go-base/lib/gcache/region"
+	gcachebase "github.com/jameschz/go-base/lib/gcache/base"
+	gcachedriver "github.com/jameschz/go-base/lib/gcache/driver"
+	gcacheredis "github.com/jameschz/go-base/lib/gcache/redis"
+	gcacheregion "github.com/jameschz/go-base/lib/gcache/region"
 )
 
 // D : connect by driver
@@ -42,6 +42,7 @@ func R(rs string) (ic gcachebase.ICache) {
 	case "redis":
 		cache := &gcacheredis.Redis{}
 		cache.Region = _cRegion
+		cache.Driver = _cRegion.Driver
 		ic = cache
 	default:
 		panic("gcache> unknown region driver type")

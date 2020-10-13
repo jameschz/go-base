@@ -1,10 +1,10 @@
 package gdo
 
 import (
-	"github.com/jameschz/go-base/lib/gdo/base"
-	"github.com/jameschz/go-base/lib/gdo/cluster"
-	"github.com/jameschz/go-base/lib/gdo/driver"
-	"github.com/jameschz/go-base/lib/gdo/mysql"
+	gdobase "github.com/jameschz/go-base/lib/gdo/base"
+	gdocluster "github.com/jameschz/go-base/lib/gdo/cluster"
+	gdodriver "github.com/jameschz/go-base/lib/gdo/driver"
+	gdomysql "github.com/jameschz/go-base/lib/gdo/mysql"
 )
 
 // D : connect by driver

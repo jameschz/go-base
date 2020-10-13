@@ -1,16 +1,26 @@
+ # pool configs
+_pool: &_pool
+  pool_init_size: 5
+  pool_max_active: 10
+  pool_max_idle: 5
+  pool_min_idle: 0
+
 # drivers
 drivers:
   default:
     type: redis
+    name: default
     algo: hash # rand|hash
     nodes:
     - 127.0.0.1:6379
-    - 127.0.0.1:6379
+    <<: *_pool
   rank:
-    type: rank
+    type: redis
+    name: rank
     algo: hash
     nodes:
     - 127.0.0.1:6379
+    <<: *_pool
 
 # regions
 regions:

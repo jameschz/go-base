@@ -1,12 +1,13 @@
-package etcd
+package getcd
 
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/clientv3/concurrency"
 	"github.com/jameschz/go-base/lib/config"
-	"time"
 )
 
 // Conf :

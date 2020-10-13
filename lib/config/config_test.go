@@ -1,15 +1,16 @@
 package config
 
 import (
-	"github.com/jameschz/go-base/lib/util"
 	"testing"
+
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 func TestConfigDatabase(t *testing.T) {
 	Init()
 	tmp := Load("database").GetStringMap("drivers")
-	util.Dump(tmp)
+	gutil.Dump(tmp)
 	Init()
 	all := Load("etcd").AllSettings()
-	util.Dump(all)
+	gutil.Dump(all)
 }

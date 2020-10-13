@@ -1,4 +1,4 @@
-package util
+package gutil
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ import (
 /////////////////////////////////////////////////////////////////
 // debug funcs
 
-// Dump : util.Dump
+// Dump : gutil.Dump
 func Dump(vals ...interface{}) {
 	fmt.Print("dump> ")
 	for _, v := range vals {
@@ -27,12 +27,12 @@ func Dump(vals ...interface{}) {
 	fmt.Printf("\n")
 }
 
-// Throw : util.Throw
+// Throw : gutil.Throw
 func Throw(s string, p ...interface{}) {
 	panic(fmt.Sprintf(s, p...))
 }
 
-// Catch : util.Catch
+// Catch : gutil.Catch
 func Catch() {
 	if err := recover(); err != nil {
 		fmt.Println("catch>", err)
@@ -48,12 +48,12 @@ var (
 	_baseRoot = os.Getenv("GO_baseRoot")
 )
 
-// SetEnv : util.SetEnv
+// SetEnv : gutil.SetEnv
 func SetEnv(env string) {
 	_baseEnv = env
 }
 
-// GetEnv : util.GetEnv
+// GetEnv : gutil.GetEnv
 func GetEnv() string {
 	if len(_baseEnv) == 0 {
 		_baseEnv = "local"
@@ -61,12 +61,12 @@ func GetEnv() string {
 	return _baseEnv
 }
 
-// SetRootPath : util.SetRootPath
+// SetRootPath : gutil.SetRootPath
 func SetRootPath(path string) {
 	_baseRoot = path
 }
 
-// GetRootPath : util.GetRootPath
+// GetRootPath : gutil.GetRootPath
 func GetRootPath() string {
 	if len(_baseRoot) == 0 {
 		_baseRoot, _ = filepath.Abs(".")
@@ -77,7 +77,7 @@ func GetRootPath() string {
 /////////////////////////////////////////////////////////////////
 // call funcs
 
-// CallFunc : util.CallFunc
+// CallFunc : gutil.CallFunc
 func CallFunc(fn interface{}, args []interface{}) {
 	// check func type
 	fnType := reflect.TypeOf(fn).String()
@@ -98,7 +98,7 @@ func CallFunc(fn interface{}, args []interface{}) {
 /////////////////////////////////////////////////////////////////
 // util funcs
 
-// GetMACs : util.GetMACs
+// GetMACs : gutil.GetMACs
 func GetMACs() (macs []string) {
 	netInterfaces, err := net.Interfaces()
 	if err != nil {
@@ -115,7 +115,7 @@ func GetMACs() (macs []string) {
 	return macs
 }
 
-// GetIPs : util.GetIPs
+// GetIPs : gutil.GetIPs
 func GetIPs() (ips []string) {
 	interfaceAddrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -133,7 +133,7 @@ func GetIPs() (ips []string) {
 	return ips
 }
 
-// UUID : util.UUID
+// UUID : gutil.UUID
 func UUID() string {
 	uuid, err := uuid.NewV4()
 	if err != nil {
@@ -142,7 +142,7 @@ func UUID() string {
 	return uuid.String()
 }
 
-// SFID : util.SFID
+// SFID : gutil.SFID
 func SFID() int64 {
 	rand.Seed(time.Now().UnixNano())
 	node, err := snowflake.NewNode(rand.Int63n(1023))
@@ -152,7 +152,7 @@ func SFID() int64 {
 	return node.Generate().Int64()
 }
 
-// RangeInt : util.RangeInt
+// RangeInt : gutil.RangeInt
 func RangeInt(f int, t int) []int {
 	a := []int{}
 	if f <= t {
@@ -175,7 +175,7 @@ func RangeInt(f int, t int) []int {
 	return a
 }
 
-// RangeInt64 : util.RangeInt64
+// RangeInt64 : gutil.RangeInt64
 func RangeInt64(f int64, t int64) []int64 {
 	a := []int64{}
 	if f <= t {

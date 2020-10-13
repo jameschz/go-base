@@ -2,44 +2,42 @@ package main
 
 import (
 	"fmt"
-	"github.com/jameschz/go-base/lib/config"
-	"github.com/jameschz/go-base/lib/util"
-	"os"
-)
-
-// -- example code start
-import (
-	"github.com/jameschz/go-base/lib/example/etcdclient"
-	"github.com/jameschz/go-base/lib/example/gcacheclient"
-	"github.com/jameschz/go-base/lib/example/gdoclient"
-	"github.com/jameschz/go-base/lib/example/gmqclient"
-	"github.com/jameschz/go-base/lib/example/httpserver"
-	"github.com/jameschz/go-base/lib/example/socketclient"
-	"github.com/jameschz/go-base/lib/example/socketserver"
-	"github.com/jameschz/go-base/lib/logger"
 	"net/http"
-)
+	"os"
 
-// -- example code end
+	"github.com/jameschz/go-base/lib/config"
+	"github.com/jameschz/go-base/lib/gutil"
+
+	// -- example code start
+	exampleetcdclient "github.com/jameschz/go-base/lib/example/etcdclient"
+	examplegcacheclient "github.com/jameschz/go-base/lib/example/gcacheclient"
+	examplegdoclient "github.com/jameschz/go-base/lib/example/gdoclient"
+	examplegmqclient "github.com/jameschz/go-base/lib/example/gmqclient"
+	examplehttpserver "github.com/jameschz/go-base/lib/example/httpserver"
+	examplesocketclient "github.com/jameschz/go-base/lib/example/socketclient"
+	examplesocketserver "github.com/jameschz/go-base/lib/example/socketserver"
+	"github.com/jameschz/go-base/lib/logger"
+	// -- example code end
+)
 
 func help() {
 	fmt.Println("============================================")
-	fmt.Println("> rootpath", util.GetRootPath())
+	fmt.Println("> rootpath", gutil.GetRootPath())
 	fmt.Println("============================================")
 	// -- example code start
-	fmt.Println(" base http_server : example http server")
-	fmt.Println(" base so_server : example socket server")
-	fmt.Println(" base so_client : example socket client")
-	fmt.Println(" base gdo_query : example gdo query test")
-	fmt.Println(" base gdo_insert : example gdo insert test")
-	fmt.Println(" base gdo_update : example gdo update test")
-	fmt.Println(" base gdo_delete : example gdo delete test")
-	fmt.Println(" base gdo_tx_basic : example gdo transaction test")
-	fmt.Println(" base gcache_all : example gcache all tests")
-	fmt.Println(" base gmq_pub : example gmq publish test")
-	fmt.Println(" base gmq_sub : example gmq comsume test")
-	fmt.Println(" base etcd_ka : example etcd keepalive test")
-	fmt.Println(" base etcd_sync : example etcd sync trans test")
+	fmt.Println("> http_server : example http server")
+	fmt.Println("> so_server : example socket server")
+	fmt.Println("> so_client : example socket client")
+	fmt.Println("> gdo_query : example gdo query test")
+	fmt.Println("> gdo_insert : example gdo insert test")
+	fmt.Println("> gdo_update : example gdo update test")
+	fmt.Println("> gdo_delete : example gdo delete test")
+	fmt.Println("> gdo_tx_basic : example gdo transaction test")
+	fmt.Println("> gcache_all : example gcache all tests")
+	fmt.Println("> gmq_pub : example gmq publish test")
+	fmt.Println("> gmq_sub : example gmq comsume test")
+	fmt.Println("> etcd_ka : example etcd keepalive test")
+	fmt.Println("> etcd_sync : example etcd sync trans test")
 	// -- example code end
 	fmt.Println("============================================")
 	os.Exit(0)

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/jameschz/go-base/lib/util"
+	"github.com/jameschz/go-base/lib/gutil"
 	"github.com/spf13/viper"
 )
 
@@ -14,7 +14,7 @@ var (
 func Init() {
 	// init config dir
 	if len(_configDir) == 0 {
-		_configDir = util.GetRootPath() + "/etc/" + util.GetEnv()
+		_configDir = gutil.GetRootPath() + "/etc/" + gutil.GetEnv()
 	}
 }
 

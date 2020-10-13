@@ -1,9 +1,10 @@
 package gcacheredis
 
 import (
-	"github.com/go-redis/redis"
-	"github.com/jameschz/go-base/lib/gcache/base"
 	"time"
+
+	gcachebase "github.com/jameschz/go-base/lib/gcache/base"
+	gcachepool "github.com/jameschz/go-base/lib/gcache/pool"
 )
 
 var (
@@ -12,40 +13,38 @@ var (
 
 // Redis :
 type Redis struct {
-	gcachebase.Cache               // extends Driver, NodeName
-	Conn             *redis.Client // redis connection
+	gcachebase.Cache // extends base cache
 }
 
 // Connect :
-func (r *Redis) Connect(node string) error {
-	r.Conn = redis.NewClient(&redis.Options{
-		Addr: node,
-	})
+func (r *Redis) Connect(k string) error {
+	// connect once
+	if r.RedisConn == nil {
+		// gdopool
+		gcachepool.Init()
+		name := r.Driver.Name
+		node := r.Driver.GetShardNode(k)
+		dataSource, err := gcachepool.Fetch(name, node)
+		// init redis vars
+		r.Node = node
+		r.DataSource = dataSource
+		r.RedisConn = dataSource.RedisConn
+		return err
+	}
 	return nil
 }
 
 // Close :
 func (r *Redis) Close() error {
-	if r.Conn != nil {
-		return r.Conn.Close()
+	// close once
+	if r.RedisConn != nil {
+		gcachepool.Return(r.DataSource)
+		r.DataSource = nil
+		r.RedisConn = nil
+		r.Node = ""
+		return nil
 	}
 	return nil
-}
-
-// Shard :
-func (r *Redis) Shard(k string) error {
-	var _err error
-	// if not connected
-	if r.Conn == nil {
-		if r.Region != nil {
-			// shard by region
-			_err = r.Connect(r.Region.Driver.GetShardNode(k))
-		} else {
-			// shard by driver
-			_err = r.Connect(r.Driver.GetShardNode(k))
-		}
-	}
-	return _err
 }
 
 // Set :
@@ -65,10 +64,10 @@ func (r *Redis) SetTTL(k string, v string, exp time.Duration) error {
 	if r.Region != nil {
 		k = r.Region.GetKey(k)
 	}
-	// sharding
-	r.Shard(k)
+	// connect
+	r.Connect(k)
 	// set kv
-	_, err := r.Conn.Set(k, v, exp).Result()
+	_, err := r.RedisConn.Set(k, v, exp).Result()
 	if err != nil {
 		return err
 	}
@@ -81,10 +80,10 @@ func (r *Redis) Get(k string) (string, error) {
 	if r.Region != nil {
 		k = r.Region.GetKey(k)
 	}
-	// sharding
-	r.Shard(k)
+	// connect
+	r.Connect(k)
 	// get kv
-	v, err := r.Conn.Get(k).Result()
+	v, err := r.RedisConn.Get(k).Result()
 	if err != nil {
 		return "", err
 	}
@@ -97,10 +96,10 @@ func (r *Redis) Del(k string) error {
 	if r.Region != nil {
 		k = r.Region.GetKey(k)
 	}
-	// sharding
-	r.Shard(k)
+	// connect
+	r.Connect(k)
 	// del kv
-	_, err := r.Conn.Del(k).Result()
+	_, err := r.RedisConn.Del(k).Result()
 	if err != nil {
 		return err
 	}

@@ -1,11 +1,12 @@
 package gcacheregion
 
 import (
-	"github.com/jameschz/go-base/lib/config"
-	"github.com/jameschz/go-base/lib/gcache/driver"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jameschz/go-base/lib/config"
+	gcachedriver "github.com/jameschz/go-base/lib/gcache/driver"
 )
 
 // Region :

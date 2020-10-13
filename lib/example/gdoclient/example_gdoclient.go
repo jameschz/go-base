@@ -2,14 +2,18 @@ package examplegdoclient
 
 import (
 	"fmt"
-	"github.com/jameschz/go-base/lib/gdo"
-	"github.com/jameschz/go-base/lib/util"
 	"strconv"
 	"time"
+
+	"github.com/jameschz/go-base/lib/gdo"
+	gdopool "github.com/jameschz/go-base/lib/gdo/pool"
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 // MysqlQueryBasic :
 func MysqlQueryBasic() {
+	// print debug info
+	gdopool.SetDebug(true)
 	// init by driver
 	db := gdo.D("demo")
 	defer db.Close()
@@ -28,7 +32,7 @@ func MysqlQueryBasic() {
 		r, _ := db.T("story").FetchMaps(rows)
 		for k, v := range *r {
 			fmt.Println("> mysql query basic : FetchMaps - id :", k)
-			util.Dump(v)
+			gutil.Dump(v)
 		}
 	}
 	// test FetchMap
@@ -38,7 +42,7 @@ func MysqlQueryBasic() {
 	} else {
 		r, _ := db.T("story").FetchMap(rows)
 		fmt.Println("> mysql query basic : FetchMap")
-		util.Dump(r)
+		gutil.Dump(r)
 	}
 	// test FetchStructs
 	rows, err = db.T("story").Select("id,title,content,dtime", "1=1")
@@ -49,7 +53,7 @@ func MysqlQueryBasic() {
 		r, _ := db.T("story").FetchStructs(rows, s)
 		for k, v := range *r {
 			fmt.Println("> mysql query basic : FetchStructs - id :", k)
-			util.Dump(v.(story))
+			gutil.Dump(v.(story))
 		}
 	}
 	// test FetchStruct
@@ -60,12 +64,14 @@ func MysqlQueryBasic() {
 		s := &story{}
 		r, _ := db.T("story").FetchStruct(rows, s)
 		fmt.Println("> mysql query basic : FetchStruct")
-		util.Dump(r.(story))
+		gutil.Dump(r.(story))
 	}
 }
 
 // MysqlInsertBasic :
 func MysqlInsertBasic() {
+	// print debug info
+	gdopool.SetDebug(true)
 	// init by driver
 	db := gdo.D("demo")
 	defer db.Close()
@@ -80,6 +86,8 @@ func MysqlInsertBasic() {
 
 // MysqlUpdateBasic :
 func MysqlUpdateBasic() {
+	// print debug info
+	gdopool.SetDebug(true)
 	// init by driver
 	db := gdo.D("demo")
 	defer db.Close()
@@ -100,6 +108,8 @@ func MysqlUpdateBasic() {
 
 // MysqlDeleteBasic :
 func MysqlDeleteBasic() {
+	// print debug info
+	gdopool.SetDebug(true)
 	// init by driver
 	db := gdo.D("demo")
 	defer db.Close()
@@ -126,31 +136,31 @@ func MysqlTxBasic() {
 	// tx select
 	id, err := db.T("story").Max("id")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	} else {
-		util.Dump("before insert", id)
+		gutil.Dump("before insert", id)
 	}
 	// tx insert
 	id, err = db.T("story").Insert("title=?,content=?,dtime=?", "title N", "content N", time.Now().Unix())
 	if err != nil {
-		util.Dump("insert fail", id, err)
+		gutil.Dump("insert fail", id, err)
 		db.Rollback()
 	}
 	// tx select
 	id, err = db.T("story").Max("id")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	} else {
-		util.Dump("before commit", id)
+		gutil.Dump("before commit", id)
 	}
 	// tx commit
-	util.Dump("insert ok", id)
+	gutil.Dump("insert ok", id)
 	db.Commit()
 	// tx select
 	id, err = db.T("story").Max("id")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	} else {
-		util.Dump("after commit", id)
+		gutil.Dump("after commit", id)
 	}
 }

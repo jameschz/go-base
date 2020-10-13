@@ -1,7 +1,7 @@
 package gmqbase
 
 import (
-	"github.com/jameschz/go-base/lib/gmq/driver"
+	gmqdriver "github.com/jameschz/go-base/lib/gmq/driver"
 )
 
 // MQ :

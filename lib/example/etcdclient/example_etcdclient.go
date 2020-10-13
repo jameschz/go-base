@@ -2,15 +2,16 @@ package exampleetcdclient
 
 import (
 	"fmt"
-	"github.com/jameschz/go-base/lib/etcd"
-	"github.com/jameschz/go-base/lib/util"
 	"time"
+
+	"github.com/jameschz/go-base/lib/getcd"
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 // TestPut :
 func TestPut() {
 	// init client
-	c := etcd.Client()
+	c := getcd.Client()
 	defer c.Close()
 	// set resource
 	c.Put("/host/192.168.1.1", "123")
@@ -23,32 +24,32 @@ func TestPut() {
 // TestGet :
 func TestGet() {
 	// init client
-	c := etcd.Client()
+	c := getcd.Client()
 	defer c.Close()
 	// get resource
 	r, err := c.Get("/room")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	}
-	util.Dump("test get >>>")
+	gutil.Dump("test get >>>")
 	for k, v := range r {
-		util.Dump(k, v)
+		gutil.Dump(k, v)
 	}
 	// get with sora
 	r, err = c.GetWithSort("/host", "value|desc")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	}
-	util.Dump("test get sorted >>>")
+	gutil.Dump("test get sorted >>>")
 	for k, v := range r {
-		util.Dump(k, v)
+		gutil.Dump(k, v)
 	}
 }
 
 // TestDel :
 func TestDel() {
 	// init client
-	c := etcd.Client()
+	c := getcd.Client()
 	defer c.Close()
 	// set resource
 	c.Del("/host")
@@ -57,7 +58,7 @@ func TestDel() {
 // TestKA :
 func TestKA() {
 	// init client
-	c := etcd.Client()
+	c := getcd.Client()
 	defer c.Close()
 	// keep alive
 	c.KeepAlive("/host/ka", "1", 3)
@@ -66,12 +67,12 @@ func TestKA() {
 // TestSync :
 func TestSync() {
 	// init client
-	c := etcd.Client()
+	c := getcd.Client()
 	defer c.Close()
 	// do trans
 	s1 := "abc"
 	c.Sync("mutex2", func() error {
-		util.Dump(s1)
+		gutil.Dump(s1)
 		time.Sleep(5 * time.Second)
 		return nil
 	})
@@ -80,7 +81,7 @@ func TestSync() {
 // TestWatch :
 func TestWatch() {
 	// init client
-	c := etcd.Client()
+	c := getcd.Client()
 	defer c.Close()
 	// watch resource
 	rch := c.WatchWithPrefix("foo")

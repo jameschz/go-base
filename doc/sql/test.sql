@@ -67,3 +67,15 @@ CREATE TABLE IF NOT EXISTS `user_info` (
             PRIMARY KEY (`id`),
             KEY `dtime` (`dtime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+-- log_shard_1 --
+
+CREATE DATABASE IF NOT EXISTS `log_shard_1` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+USE `log_shard_1`;
+
+-- log_shard_2 --
+
+CREATE DATABASE IF NOT EXISTS `log_shard_2` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+USE `log_shard_2`;

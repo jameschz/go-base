@@ -6,6 +6,6 @@ import (
 
 func main() {
     // dump project configs
-    util.Dump("util.GetEnv()", util.GetEnv())
-    util.Dump("util.GetRootPath()", util.GetRootPath())
+    gutil.Dump("gutil.GetEnv()", gutil.GetEnv())
+    gutil.Dump("gutil.GetRootPath()", gutil.GetRootPath())
 }

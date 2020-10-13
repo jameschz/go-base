@@ -1,10 +1,11 @@
-package etcd
+package getcd
 
 import (
 	"fmt"
-	"github.com/jameschz/go-base/lib/util"
 	"testing"
 	"time"
+
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 func TestPut(t *testing.T) {
@@ -42,20 +43,20 @@ func TestGet(t *testing.T) {
 	// get resource
 	r, err := c.Get("/room")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	}
-	util.Dump("test get >>>")
+	gutil.Dump("test get >>>")
 	for k, v := range r {
-		util.Dump(k, v)
+		gutil.Dump(k, v)
 	}
 	// get with sora
 	r, err = c.GetWithSort("/host", "value|asc")
 	if err != nil {
-		util.Dump(err)
+		gutil.Dump(err)
 	}
-	util.Dump("test get sorted >>>")
+	gutil.Dump("test get sorted >>>")
 	for k, v := range r {
-		util.Dump(k, v)
+		gutil.Dump(k, v)
 	}
 }
 
@@ -74,7 +75,7 @@ func TestSync(t *testing.T) {
 	// do trans
 	s1 := "abc"
 	c.Sync("mutex2", func() error {
-		util.Dump(s1)
+		gutil.Dump(s1)
 		time.Sleep(5 * time.Second)
 		return nil
 	})

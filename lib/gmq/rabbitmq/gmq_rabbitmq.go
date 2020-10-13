@@ -1,7 +1,7 @@
 package gmqrabbitmq
 
 import (
-	"github.com/jameschz/go-base/lib/gmq/base"
+	gmqbase "github.com/jameschz/go-base/lib/gmq/base"
 
 	"github.com/streadway/amqp"
 )

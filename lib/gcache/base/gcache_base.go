@@ -1,23 +1,34 @@
 package gcachebase
 
 import (
-	"github.com/jameschz/go-base/lib/gcache/driver"
-	"github.com/jameschz/go-base/lib/gcache/region"
 	"time"
+
+	"github.com/go-redis/redis"
+	gcachedriver "github.com/jameschz/go-base/lib/gcache/driver"
+	gcacheregion "github.com/jameschz/go-base/lib/gcache/region"
 )
+
+// DataSource :
+type DataSource struct {
+	ID        string
+	Name      string
+	Node      string        // connection node
+	RedisConn *redis.Client // redis connection
+}
 
 // Cache :
 type Cache struct {
-	Driver   *gcachedriver.Driver // driver ptr
-	Region   *gcacheregion.Region // region ptr
-	NodeName string               // node name
+	Node       string               // connection node
+	Driver     *gcachedriver.Driver // driver ptr
+	Region     *gcacheregion.Region // region ptr
+	DataSource *DataSource          // datasource
+	RedisConn  *redis.Client        // redis connection
 }
 
 // ICache :
 type ICache interface {
-	Connect(node string) error
+	Connect(k string) error
 	Close() error
-	Shard(k string) (err error)
 	Set(k string, v string) error
 	SetTTL(k string, v string, exp time.Duration) error
 	Get(k string) (string, error)

@@ -2,7 +2,7 @@ package gdocluster
 
 import (
 	"github.com/jameschz/go-base/lib/config"
-	"github.com/jameschz/go-base/lib/gdo/driver"
+	gdodriver "github.com/jameschz/go-base/lib/gdo/driver"
 )
 
 // Cluster :

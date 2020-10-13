@@ -1,10 +1,11 @@
 package logger
 
 import (
-	"github.com/jameschz/go-base/lib/util"
 	"io"
 	"log"
 	"os"
+
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 )
 
 func _openLoggerFile() error {
-	logPath := util.GetRootPath() + "/log/logger.log"
+	logPath := gutil.GetRootPath() + "/log/logger.log"
 	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalln("> logger init error:", err)

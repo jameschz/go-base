@@ -1,9 +1,9 @@
 package gmq
 
 import (
-	"github.com/jameschz/go-base/lib/gmq/base"
-	"github.com/jameschz/go-base/lib/gmq/driver"
-	"github.com/jameschz/go-base/lib/gmq/rabbitmq"
+	gmqbase "github.com/jameschz/go-base/lib/gmq/base"
+	gmqdriver "github.com/jameschz/go-base/lib/gmq/driver"
+	gmqrabbitmq "github.com/jameschz/go-base/lib/gmq/rabbitmq"
 )
 
 // D : connect by driver

@@ -13,6 +13,12 @@ type Driver struct {
 	Pass    string
 	Charset string
 	DbName  string
+	// pool attrs start
+	PoolInitSize  int
+	PoolMaxActive int
+	PoolMaxIdle   int
+	PoolMinIdle   int
+	// pool attrs end
 }
 
 var (
@@ -38,6 +44,12 @@ func Init() bool {
 			Pass:    _dbDriver["pass"].(string),
 			Charset: _dbDriver["charset"].(string),
 			DbName:  _dbDriver["db"].(string),
+			// pool attrs start
+			PoolInitSize:  _dbDriver["pool_init_size"].(int),
+			PoolMaxActive: _dbDriver["pool_max_active"].(int),
+			PoolMaxIdle:   _dbDriver["pool_max_idle"].(int),
+			PoolMinIdle:   _dbDriver["pool_min_idle"].(int),
+			// pool attrs end
 		}
 		// check driver
 		if len(driver.Type) == 0 ||
@@ -61,4 +73,9 @@ func GetDriver(dbs string) (driver *Driver) {
 	}
 	driver = _dbDrivers[dbs]
 	return driver
+}
+
+// GetDrivers :
+func GetDrivers() map[string]*Driver {
+	return _dbDrivers
 }

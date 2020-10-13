@@ -12,9 +12,9 @@ func TestSqlType(t *testing.T) {
 
 func TestGetSeqIdPos(t *testing.T) {
 	cs := [][]string{
-		[]string{`select * from user where id=? and name=?`, "id"},
-		[]string{`insert into user set id=?,name=?`, "name"},
-		[]string{`update user set name=? where id=?`, "id"},
+		{`select * from user where id=? and name=?`, "id"},
+		{`insert into user set id=?,name=?`, "name"},
+		{`update user set name=? where id=?`, "id"},
 	}
 	for _, c := range cs {
 		sqlPos := GetSeqIDPos(c[0], c[1])

@@ -1,27 +1,35 @@
 package examplegcacheclient
 
 import (
-	"github.com/jameschz/go-base/lib/gcache"
-	"github.com/jameschz/go-base/lib/util"
 	"time"
+
+	"github.com/jameschz/go-base/lib/gcache"
+	gcachepool "github.com/jameschz/go-base/lib/gcache/pool"
+	"github.com/jameschz/go-base/lib/gutil"
 )
 
 // TestDriver :
 func TestDriver() {
+	// print debug info
+	gcachepool.SetDebug(true)
 	// get by driver
 	cache := gcache.D("default")
-	util.Dump(cache.Set("test1", "test1"))
-	util.Dump(cache.SetTTL("test2", "test2", 5*time.Second))
-	util.Dump(cache.Get("test1"))
-	util.Dump(cache.Del("test1"))
+	gutil.Dump(cache.Set("test1", "test1"))
+	gutil.Dump(cache.SetTTL("test2", "test2", 5*time.Second))
+	gutil.Dump(cache.Get("test1"))
+	gutil.Dump(cache.Del("test1"))
+	cache.Close()
 }
 
 // TestRegion :
 func TestRegion() {
+	// print debug info
+	gcachepool.SetDebug(true)
 	// get user region
 	cache := gcache.R("user")
-	util.Dump(cache.Set("user1", "user1"))
-	util.Dump(cache.SetTTL("user2", "user2", 5*time.Second))
-	util.Dump(cache.Get("user1"))
-	util.Dump(cache.Del("user1"))
+	gutil.Dump(cache.Set("user1", "user1"))
+	gutil.Dump(cache.SetTTL("user2", "user2", 5*time.Second))
+	gutil.Dump(cache.Get("user1"))
+	gutil.Dump(cache.Del("user1"))
+	cache.Close()
 }

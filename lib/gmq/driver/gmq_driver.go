@@ -1,10 +1,11 @@
 package gmqdriver
 
 import (
-	"github.com/jameschz/go-base/lib/config"
 	"hash/crc32"
 	"math/rand"
 	"time"
+
+	"github.com/jameschz/go-base/lib/config"
 )
 
 // Driver :
