@@ -3,6 +3,7 @@ vendor/
 
 bin/*
 log/*
+etc/env.txt
 !.gitkeep
 
 .env

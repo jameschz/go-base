@@ -2,6 +2,7 @@ package gutil
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"net"
 	"os"
@@ -55,6 +56,11 @@ func SetEnv(env string) {
 
 // GetEnv : gutil.GetEnv
 func GetEnv() string {
+	// get from file
+	if len(_baseEnv) == 0 {
+		_baseEnv = GetFileContent(GetRootPath() + "/etc/env.txt")
+	}
+	// default local
 	if len(_baseEnv) == 0 {
 		_baseEnv = "local"
 	}
@@ -72,6 +78,20 @@ func GetRootPath() string {
 		_baseRoot, _ = filepath.Abs(".")
 	}
 	return _baseRoot
+}
+
+// GetFileContent : gutil.GetFileContent
+func GetFileContent(file string) string {
+	f, err := os.Open(file)
+	defer f.Close()
+	if err != nil {
+		return ""
+	}
+	c, err := ioutil.ReadAll(f)
+	if err != nil {
+		return ""
+	}
+	return string(c)
 }
 
 /////////////////////////////////////////////////////////////////
