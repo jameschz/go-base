@@ -49,7 +49,7 @@ func Init() bool {
 		cluster := &Cluster{}
 		cluster.Type = _cCluster["type"].(string)
 		cluster.Algo = _cCluster["algo"].(string)
-		cluster.SeqID = _cCluster["seqID"].(string)
+		cluster.SeqID = _cCluster["seq_id"].(string)
 		// get cluster shards
 		_cShards := _cCluster["shards"].([]interface{})
 		shards := make([]Shard, len(_cShards))
