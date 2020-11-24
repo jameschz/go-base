@@ -105,3 +105,19 @@ func (r *Redis) Del(k string) error {
 	}
 	return nil
 }
+
+// Incr :
+func (r *Redis) Incr(k string) (int64, error) {
+	// use region key
+	if r.Region != nil {
+		k = r.Region.GetKey(k)
+	}
+	// connect
+	r.Connect(k)
+	// get kv
+	v, err := r.RedisConn.Incr(k).Result()
+	if err != nil {
+		return 0, err
+	}
+	return v, nil
+}

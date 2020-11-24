@@ -33,4 +33,5 @@ type ICache interface {
 	SetTTL(k string, v string, exp time.Duration) error
 	Get(k string) (string, error)
 	Del(k string) error
+	Incr(k string) (int64, error)
 }
