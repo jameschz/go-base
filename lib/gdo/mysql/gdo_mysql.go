@@ -198,7 +198,7 @@ func (db *Mysql) Min(field string) (val int64, err error) {
 	if err != nil {
 		return -1, err
 	}
-	sql := "select max(" + field + ") from " + table
+	sql := "select min(" + field + ") from " + table
 	rows, err := db.Query(sql)
 	if err != nil {
 		return -1, err

@@ -121,3 +121,19 @@ func (r *Redis) Incr(k string) (int64, error) {
 	}
 	return v, nil
 }
+
+// IncrBy :
+func (r *Redis) IncrBy(k string, val int64) (int64, error) {
+	// use region key
+	if r.Region != nil {
+		k = r.Region.GetKey(k)
+	}
+	// connect
+	r.Connect(k)
+	// get kv
+	v, err := r.RedisConn.IncrBy(k, val).Result()
+	if err != nil {
+		return 0, err
+	}
+	return v, nil
+}

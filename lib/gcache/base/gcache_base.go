@@ -34,4 +34,5 @@ type ICache interface {
 	Get(k string) (string, error)
 	Del(k string) error
 	Incr(k string) (int64, error)
+	IncrBy(k string, val int64) (int64, error)
 }
