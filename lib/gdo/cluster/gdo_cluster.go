@@ -63,13 +63,13 @@ func Init() bool {
 			case "range":
 				shards[i] = &ShardRange{
 					DbName: _cShard["db"].(string),
-					FrNum:  _cShard["fr_num"].(int64),
-					ToNum:  _cShard["to_num"].(int64),
+					FrNum:  int64(_cShard["fr_num"].(int)),
+					ToNum:  int64(_cShard["to_num"].(int)),
 				}
 			case "hash":
 				shards[i] = &ShardHash{
 					DbName: _cShard["db"].(string),
-					ModRes: _cShard["mod_res"].(int64),
+					ModRes: int64(_cShard["mod_res"].(int)),
 				}
 			}
 			i++
