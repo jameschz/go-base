@@ -18,6 +18,16 @@ func TestDriver() {
 	gutil.Dump(cache.SetTTL("test2", "test2", 5*time.Second))
 	gutil.Dump(cache.Get("test1"))
 	gutil.Dump(cache.Del("test1"))
+
+	incr, _ := cache.Incr("incr")
+	gutil.Dump("IncrD:", incr)
+
+	incr, _ = cache.Incr("incr")
+	gutil.Dump("IncrD:", incr)
+
+	incrBy, _ := cache.IncrBy("incr", 5)
+	gutil.Dump("IncrByD:", incrBy)
+
 	cache.Close()
 }
 
@@ -31,5 +41,15 @@ func TestRegion() {
 	gutil.Dump(cache.SetTTL("user2", "user2", 5*time.Second))
 	gutil.Dump(cache.Get("user1"))
 	gutil.Dump(cache.Del("user1"))
+
+	incr, _ := cache.Incr("incr")
+	gutil.Dump("IncrR:", incr)
+
+	incr, _ = cache.Incr("incr")
+	gutil.Dump("IncrR:", incr)
+
+	incrBy, _ := cache.IncrBy("incr", 10)
+	gutil.Dump("IncrByR:", incrBy)
+
 	cache.Close()
 }

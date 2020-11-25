@@ -109,7 +109,7 @@ func (db *Mysql) Shard(sqlStr string, params ...interface{}) error {
 		if pos < 0 {
 			panic("gdo> can not find seq value")
 		}
-		dbs := db.Cluster.Shard(params[pos].(int))
+		dbs := db.Cluster.Shard(params[pos].(int64))
 		driver := gdodriver.GetDriver(dbs)
 		if len(driver.Type) == 0 {
 			panic("gdo> db driver error")

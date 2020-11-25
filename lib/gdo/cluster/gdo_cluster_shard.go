@@ -3,8 +3,8 @@ package gdocluster
 // ShardRange : shard by range
 type ShardRange struct {
 	DbName string
-	FrNum  int
-	ToNum  int
+	FrNum  int64
+	ToNum  int64
 }
 
 // GetDbName :
@@ -13,7 +13,7 @@ func (s *ShardRange) GetDbName() string {
 }
 
 // IsMatch :
-func (s *ShardRange) IsMatch(seqID int, shardNum int) bool {
+func (s *ShardRange) IsMatch(seqID int64, shardNum int64) bool {
 	if seqID >= s.FrNum && seqID <= s.ToNum {
 		return true
 	}
@@ -23,7 +23,7 @@ func (s *ShardRange) IsMatch(seqID int, shardNum int) bool {
 // ShardHash : shard by hush
 type ShardHash struct {
 	DbName string
-	ModRes int
+	ModRes int64
 }
 
 // GetDbName :
@@ -32,7 +32,7 @@ func (s *ShardHash) GetDbName() string {
 }
 
 // IsMatch :
-func (s *ShardHash) IsMatch(seqID int, shardNum int) bool {
+func (s *ShardHash) IsMatch(seqID int64, shardNum int64) bool {
 	modRes := seqID % shardNum
 	if s.ModRes == modRes {
 		return true
@@ -43,5 +43,5 @@ func (s *ShardHash) IsMatch(seqID int, shardNum int) bool {
 // Shard : shard interface
 type Shard interface {
 	GetDbName() string
-	IsMatch(seqID int, shardNum int) bool
+	IsMatch(seqID int64, shardNum int64) bool
 }
