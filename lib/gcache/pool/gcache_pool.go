@@ -2,6 +2,8 @@ package gcachepool
 
 import (
 	"errors"
+	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/go-redis/redis"
@@ -34,8 +36,24 @@ func createDataSource(driver *gcachedriver.Driver, node string) *gcachebase.Data
 	ds.ID = gutil.UUID()
 	switch driver.Type {
 	case "redis":
+		//add begin (db select)
+		addr := node
+		db := 0
+		nodeArr := strings.Split(node, ":")
+		if len(nodeArr) > 2 {
+			var build strings.Builder
+			build.WriteString(nodeArr[0])
+			build.WriteString(":")
+			build.WriteString(nodeArr[1])
+
+			addr = build.String()
+			db, _ = strconv.Atoi(nodeArr[2])
+		}
+		//add end
 		ds.RedisConn = redis.NewClient(&redis.Options{
-			Addr: node,
+			// Addr: node,
+			Addr: addr,
+			DB:   db,
 		})
 	}
 	// for debug

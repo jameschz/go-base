@@ -12,7 +12,8 @@ drivers:
     name: default
     algo: hash # rand|hash
     nodes:
-    - 127.0.0.1:6379
+    - 127.0.0.1:6379:0
+    - 127.0.0.1:6379:1
     <<: *_pool
   rank:
     type: redis
