@@ -78,7 +78,7 @@ func GetRegion(rs string) (region *Region) {
 
 // GetKey :
 func (r *Region) GetKey(k string) string {
-	return r.Name + ":" + k
+	return r.Name + "_" + k
 }
 
 // GetExp :
