@@ -31,7 +31,7 @@ export GO_BASE_ROOT=/path/to/go-base
 **Run basic examples**
 
 ```
-git clone http://192.168.1.201:8888/go/go-base.git
+git clone https://github.com/jameschz/go-base.git
 cd go-base
 go mod download
 make # Build in Linux & Mac
