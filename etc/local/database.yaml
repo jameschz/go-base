@@ -1,9 +1,9 @@
  # pool configs
 _pool: &_pool
-  pool_init_size: 5
   pool_max_active: 10
+  pool_max_active_sec: 300
   pool_max_idle: 5
-  pool_min_idle: 0
+  pool_max_idle_sec: 600
 
 # database configs
 _base: &_base

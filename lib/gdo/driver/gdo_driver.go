@@ -14,10 +14,10 @@ type Driver struct {
 	Charset string
 	DbName  string
 	// pool attrs start
-	PoolInitSize  int
-	PoolMaxActive int
-	PoolMaxIdle   int
-	PoolMinIdle   int
+	PoolMaxActive    int
+	PoolMaxActiveSec int
+	PoolMaxIdle      int
+	PoolMaxIdleSec   int
 	// pool attrs end
 }
 
@@ -45,10 +45,10 @@ func Init() bool {
 			Charset: _dbDriver["charset"].(string),
 			DbName:  _dbDriver["db"].(string),
 			// pool attrs start
-			PoolInitSize:  _dbDriver["pool_init_size"].(int),
-			PoolMaxActive: _dbDriver["pool_max_active"].(int),
-			PoolMaxIdle:   _dbDriver["pool_max_idle"].(int),
-			PoolMinIdle:   _dbDriver["pool_min_idle"].(int),
+			PoolMaxActive:    _dbDriver["pool_max_active"].(int),
+			PoolMaxActiveSec: _dbDriver["pool_max_active_sec"].(int),
+			PoolMaxIdle:      _dbDriver["pool_max_idle"].(int),
+			PoolMaxIdleSec:   _dbDriver["pool_max_idle_sec"].(int),
 			// pool attrs end
 		}
 		// check driver
