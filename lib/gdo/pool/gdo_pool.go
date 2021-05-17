@@ -62,7 +62,6 @@ func createDataSource(driver *gdodriver.Driver) *gdobase.DataSource {
 // private
 func releaseDataSource(ds *gdobase.DataSource) {
 	if ds != nil {
-		ds.Conn.Close()
 		ds = nil
 	}
 	// for debug
