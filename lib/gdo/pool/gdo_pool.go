@@ -85,8 +85,8 @@ func Init() (err error) {
 	// init pool by drivers
 	_dbPool = base.NewHmap()
 	dbDrivers := gdodriver.GetDrivers()
-	for dbName, dbDriver := range dbDrivers {
-		_dbPool.Set(dbName, createDataSource(dbDriver))
+	for _, dbDriver := range dbDrivers {
+		_dbPool.Set(dbDriver.DbName, createDataSource(dbDriver))
 	}
 	// for debug
 	debugPrint("gdopool.Init", _dbPool)

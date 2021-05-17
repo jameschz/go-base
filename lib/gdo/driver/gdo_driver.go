@@ -67,11 +67,11 @@ func Init() bool {
 }
 
 // GetDriver :
-func GetDriver(dbs string) (driver *Driver) {
-	if _, r := _dbDrivers[dbs]; !r {
+func GetDriver(drName string) (driver *Driver) {
+	if _, r := _dbDrivers[drName]; !r {
 		panic("gdo> can not find driver")
 	}
-	driver = _dbDrivers[dbs]
+	driver = _dbDrivers[drName]
 	return driver
 }
 

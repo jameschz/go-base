@@ -17,26 +17,26 @@ _base: &_base
 
 # db drivers list
 drivers:
-  demo:
-    db: demo
+  base:
+    db: gb_base
     <<: *_base
   user_shard_1:
-    db: user_shard_1
+    db: gb_user_shard_1
     <<: *_base
   user_shard_2:
-    db: user_shard_2
+    db: gb_user_shard_2
     <<: *_base
   user_shard_3:
-    db: user_shard_3
+    db: gb_user_shard_3
     <<: *_base
   user_shard_4:
-    db: user_shard_4
+    db: gb_user_shard_4
     <<: *_base
   log_shard_1:
-    db: log_shard_1
+    db: gb_log_shard_1
     <<: *_base
   log_shard_2:
-    db: log_shard_2
+    db: gb_log_shard_2
     <<: *_base
 
 # db cluster configs
@@ -46,23 +46,23 @@ clusters:
     algo: hash
     seq_id: id
     shards:
-    - db: user_shard_1
+    - driver: user_shard_1
       mod_res: 1
-    - db: user_shard_2
+    - driver: user_shard_2
       mod_res: 2
-    - db: user_shard_3
+    - driver: user_shard_3
       mod_res: 3
-    - db: user_shard_4
+    - driver: user_shard_4
       mod_res: 0
   log:
     type: mysql
     algo: range
     seq_id: id
     shards:
-    - db: log_shard_1
+    - driver: log_shard_1
       fr_num: 1
       to_num: 500
-    - db: log_shard_2
+    - driver: log_shard_2
       fr_num: 501
       to_num: 1000
       

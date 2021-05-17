@@ -14,18 +14,18 @@ type Cluster struct {
 }
 
 // Shard :
-func (c *Cluster) Shard(seqID int64) (db string) {
+func (c *Cluster) Shard(seqID int64) (drName string) {
 	if len(c.Shards) == 0 {
 		panic("gdo> cluster has no shard")
 	}
 	shardNum := int64(len(c.Shards))
 	for _, shard := range c.Shards {
 		if shard.IsMatch(seqID, shardNum) {
-			db = shard.GetDbName()
+			drName = shard.GetDrName()
 			break
 		}
 	}
-	return db
+	return drName
 }
 
 var (
@@ -62,13 +62,13 @@ func Init() bool {
 			switch cluster.Algo {
 			case "range":
 				shards[i] = &ShardRange{
-					DbName: _cShard["db"].(string),
+					DrName: _cShard["driver"].(string),
 					FrNum:  int64(_cShard["fr_num"].(int)),
 					ToNum:  int64(_cShard["to_num"].(int)),
 				}
 			case "hash":
 				shards[i] = &ShardHash{
-					DbName: _cShard["db"].(string),
+					DrName: _cShard["driver"].(string),
 					ModRes: int64(_cShard["mod_res"].(int)),
 				}
 			}
