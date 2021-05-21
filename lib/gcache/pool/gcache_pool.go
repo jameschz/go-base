@@ -52,7 +52,7 @@ func createDataSource(driver *gcachedriver.Driver, node string) *gcachebase.Data
 			Addr: addr,
 			DB:   db,
 			// Pool Settings
-			PoolSize:     driver.PoolIdleMinSize,
+			PoolSize:     driver.PoolInitSize,
 			MinIdleConns: driver.PoolIdleMinSize,
 			IdleTimeout:  time.Duration(driver.PoolIdleTimeoutMin * int(time.Minute)),
 		})
@@ -105,6 +105,13 @@ func Init() (err error) {
 			_cPool.Set(cKey, createDataSource(cDriver, cNode))
 		}
 	}
+	// heart beat
+	go func() {
+		time.Sleep(1 * time.Minute)
+		for _, ds := range _cPool.Data() {
+			ds.(*gcachebase.DataSource).RedisConn.Ping()
+		}
+	}()
 	// for debug
 	debugPrint("gcachepool.Init", _cPool)
 	// init ok status

@@ -1,6 +1,7 @@
 package examplegcacheclient
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/jameschz/go-base/lib/gcache"
@@ -55,12 +56,12 @@ func TestDriver() {
 	cache.Close()
 
 	// test connection timeout
-	// for i := 0; i < 5; i++ {
-	// 	time.Sleep(10 * time.Second)
-	// 	cache = gcache.D("default")
-	// 	cache.Set("test11", "test1")
-	// 	cache.Close()
-	// }
+	for i := 0; i < 5; i++ {
+		time.Sleep(10 * time.Second)
+		cache = gcache.D("default")
+		cache.Set("test.timeout."+strconv.Itoa(i), "test1")
+		cache.Close()
+	}
 
 }
 
