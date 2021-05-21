@@ -106,7 +106,7 @@ func Fetch(dbName string) (ds *gdobase.DataSource, err error) {
 
 // Return : public
 func Return(ds *gdobase.DataSource) (err error) {
-	// return start >>> lock
+	// release datasource
 	releaseDataSource(ds)
 	// return 0
 	return err
