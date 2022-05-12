@@ -157,9 +157,7 @@ func (r *Redis) SetNX(k string, v string, exp time.Duration) (bool, error) {
 	r.Connect(k)
 	// set kv
 	result, err := r.RedisConn.SetNX(k, v, exp).Result()
-	if err == redis.Nil {
-		return false, nil
-	} else if err != nil {
+	if err != nil {
 		return false, err
 	}
 	return result, nil
