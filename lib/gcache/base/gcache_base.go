@@ -35,4 +35,5 @@ type ICache interface {
 	Del(k string) error
 	Incr(k string) (int64, error)
 	IncrBy(k string, val int64) (int64, error)
+	SetNX(k string, v string, exp time.Duration) (bool, error)
 }

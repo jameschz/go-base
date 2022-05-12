@@ -85,5 +85,8 @@ func TestRegion() {
 	incrBy, _ := cache.IncrBy("incr", 10)
 	gutil.Dump("IncrByR:", incrBy)
 
+	result, _ := cache.SetNX("SetNXR", "v", 10*time.Second)
+	gutil.Dump("SetNXR:", result)
+
 	cache.Close()
 }
