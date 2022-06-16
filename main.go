@@ -32,6 +32,10 @@ func help() {
 	fmt.Println("> gdo_insert : example gdo insert test")
 	fmt.Println("> gdo_update : example gdo update test")
 	fmt.Println("> gdo_delete : example gdo delete test")
+	fmt.Println("> gdo_query_s : example gdo shard query test")
+	fmt.Println("> gdo_insert_s : example gdo shard insert test")
+	fmt.Println("> gdo_update_s : example gdo shard update test")
+	fmt.Println("> gdo_delete_s : example gdo shard delete test")
 	fmt.Println("> gdo_tx_basic : example gdo transaction test")
 	fmt.Println("> gcache_all : example gcache all tests")
 	fmt.Println("> gmq_pub : example gmq publish test")
@@ -102,6 +106,22 @@ func main() {
 	case "gdo_delete":
 		{
 			examplegdoclient.MysqlDeleteBasic()
+		}
+	case "gdo_query_s":
+		{
+			examplegdoclient.MysqlQueryShard()
+		}
+	case "gdo_insert_s":
+		{
+			examplegdoclient.MysqlInsertShard()
+		}
+	case "gdo_update_s":
+		{
+			examplegdoclient.MysqlUpdateShard()
+		}
+	case "gdo_delete_s":
+		{
+			examplegdoclient.MysqlDeleteShard()
 		}
 	case "gdo_tx_basic":
 		{

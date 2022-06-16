@@ -15,10 +15,9 @@ type Driver struct {
 	Algo  string
 	Nodes []string
 	// pool attrs start
-	PoolInitSize  int
-	PoolMaxActive int
-	PoolMaxIdle   int
-	PoolMinIdle   int
+	PoolInitSize       int
+	PoolIdleMinSize    int
+	PoolIdleTimeoutMin int
 	// pool attrs end
 }
 
@@ -49,10 +48,9 @@ func Init() bool {
 			Algo:  _cDriver["algo"].(string),
 			Nodes: _cNodes,
 			// pool attrs start
-			PoolInitSize:  _cDriver["pool_init_size"].(int),
-			PoolMaxActive: _cDriver["pool_max_active"].(int),
-			PoolMaxIdle:   _cDriver["pool_max_idle"].(int),
-			PoolMinIdle:   _cDriver["pool_min_idle"].(int),
+			PoolInitSize:       _cDriver["pool_init_size"].(int),
+			PoolIdleMinSize:    _cDriver["pool_idle_min_size"].(int),
+			PoolIdleTimeoutMin: _cDriver["pool_idle_timeout_min"].(int),
 			// pool attrs end
 		}
 		// check driver

@@ -1,6 +1,7 @@
 package examplegcacheclient
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/jameschz/go-base/lib/gcache"
@@ -54,21 +55,14 @@ func TestDriver() {
 	cache.Set("test11", "test1")
 	cache.Close()
 
-	// gutil.Dump(cache.Set("test1", "test1"))
-	// gutil.Dump(cache.SetTTL("test2", "test2", 5*time.Second))
-	// gutil.Dump(cache.Get("test1"))
-	// gutil.Dump(cache.Del("test1"))
+	// test connection timeout
+	for i := 0; i < 5; i++ {
+		time.Sleep(10 * time.Second)
+		cache = gcache.D("default")
+		cache.Set("test.timeout."+strconv.Itoa(i), "test1")
+		cache.Close()
+	}
 
-	// incr, _ := cache.Incr("incr")
-	// gutil.Dump("IncrD:", incr)
-
-	// incr, _ = cache.Incr("incr")
-	// gutil.Dump("IncrD:", incr)
-
-	// incrBy, _ := cache.IncrBy("incr", 5)
-	// gutil.Dump("IncrByD:", incrBy)
-
-	cache.Close()
 }
 
 // TestRegion :
@@ -90,6 +84,9 @@ func TestRegion() {
 
 	incrBy, _ := cache.IncrBy("incr", 10)
 	gutil.Dump("IncrByR:", incrBy)
+
+	result, _ := cache.SetNX("SetNXR", "v", 10*time.Second)
+	gutil.Dump("SetNXR:", result)
 
 	cache.Close()
 }

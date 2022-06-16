@@ -2,8 +2,7 @@ package gdopool
 
 import (
 	"database/sql"
-	"errors"
-	"sync"
+	"time"
 
 	base "github.com/jameschz/go-base/lib/base"
 	gdobase "github.com/jameschz/go-base/lib/gdo/base"
@@ -15,16 +14,14 @@ import (
 )
 
 var (
-	_debugStatus  bool
-	_dbPoolInit   bool
-	_dbPoolIdle   map[string]*base.Stack
-	_dbPoolActive map[string]*base.Hmap
-	_dbPoolLock   sync.Mutex
+	_debugStatus bool
+	_dbPoolInit  bool
+	_dbPool      *base.Hmap
 )
 
 // private
 func debugPrint(vals ...interface{}) {
-	if _debugStatus == true {
+	if _debugStatus {
 		gutil.Dump(vals...)
 	}
 }
@@ -47,6 +44,14 @@ func createDataSource(driver *gdodriver.Driver) *gdobase.DataSource {
 		if err != nil {
 			panic("gdo> open db error")
 		}
+		err = dbc.Ping()
+		if err != nil {
+			panic("gdo> ping db error : " + err.Error())
+		}
+		dbc.SetMaxOpenConns(driver.PoolMaxActive)
+		dbc.SetMaxIdleConns(driver.PoolMaxIdle)
+		dbc.SetConnMaxLifetime(time.Duration(driver.PoolMaxActiveSec * int(time.Second)))
+		dbc.SetConnMaxIdleTime(time.Duration(driver.PoolMaxIdleSec * int(time.Second)))
 		ds.Conn = dbc
 	}
 	// for debug
@@ -57,7 +62,6 @@ func createDataSource(driver *gdodriver.Driver) *gdobase.DataSource {
 // private
 func releaseDataSource(ds *gdobase.DataSource) {
 	if ds != nil {
-		ds.Conn.Close()
 		ds = nil
 	}
 	// for debug
@@ -72,24 +76,19 @@ func SetDebug(status bool) {
 // Init : public
 func Init() (err error) {
 	// init once
-	if _dbPoolInit == true {
+	if _dbPoolInit {
 		return nil
 	}
 	// init drivers
 	gdodriver.Init()
 	// init pool by drivers
+	_dbPool = base.NewHmap()
 	dbDrivers := gdodriver.GetDrivers()
-	_dbPoolIdle = make(map[string]*base.Stack, 0)
-	_dbPoolActive = make(map[string]*base.Hmap, 0)
-	for dbName, dbDriver := range dbDrivers {
-		_dbPoolIdle[dbName] = base.NewStack()
-		_dbPoolActive[dbName] = base.NewHmap()
-		for i := 0; i < dbDriver.PoolInitSize; i++ {
-			_dbPoolIdle[dbName].Push(createDataSource(dbDriver))
-		}
+	for _, dbDriver := range dbDrivers {
+		_dbPool.Set(dbDriver.DbName, createDataSource(dbDriver))
 	}
 	// for debug
-	debugPrint("gdopool.Init", _dbPoolIdle, _dbPoolActive)
+	debugPrint("gdopool.Init", _dbPool)
 	// init ok status
 	if err == nil {
 		_dbPoolInit = true
@@ -99,60 +98,16 @@ func Init() (err error) {
 
 // Fetch : public
 func Fetch(dbName string) (ds *gdobase.DataSource, err error) {
-	// get driver by name
-	dbDriver := gdodriver.GetDriver(dbName)
-	// fetch start >>> lock
-	_dbPoolLock.Lock()
-	// reach to max active size
-	activeSize := _dbPoolActive[dbName].Len()
-	if dbDriver.PoolMaxActive <= activeSize {
-		return nil, errors.New("gdopool : max active limit")
-	}
-	// add if not enough
-	idleSize := _dbPoolIdle[dbName].Len()
-	if dbDriver.PoolMinIdle >= idleSize {
-		idleSizeAdd := dbDriver.PoolMaxIdle - idleSize
-		for i := 0; i < idleSizeAdd; i++ {
-			_dbPoolIdle[dbName].Push(createDataSource(dbDriver))
-		}
-		// for debug
-		debugPrint("gdopool.Fetch Add", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
-	}
-	// fetch from front
-	if _dbPoolIdle[dbName].Len() >= 1 {
-		ds = _dbPoolIdle[dbName].Pop().(*gdobase.DataSource)
-		_dbPoolActive[dbName].Set(ds.ID, ds)
-	} else {
-		return nil, errors.New("gdopool : no enough ds")
-	}
-	// for debug
-	debugPrint("gdopool.Fetch", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
-	// fetch end >>> unlock
-	_dbPoolLock.Unlock()
+	// get datasource from pool
+	ds = _dbPool.Get(dbName).(*gdobase.DataSource)
 	// return ds 0
 	return ds, err
 }
 
 // Return : public
 func Return(ds *gdobase.DataSource) (err error) {
-	// get driver by name
-	dbName := ds.Name
-	dbDriver := gdodriver.GetDriver(dbName)
-	// return start >>> lock
-	_dbPoolLock.Lock()
-	// delete from active list
-	_dbPoolActive[dbName].Delete(ds.ID)
-	// return or release
-	idleSize := _dbPoolIdle[dbName].Len()
-	if dbDriver.PoolMaxIdle <= idleSize {
-		releaseDataSource(ds)
-	} else {
-		_dbPoolIdle[dbName].Push(ds)
-	}
-
-	// return end >>> unlock
-	_dbPoolLock.Unlock()
-	// for debug
-	debugPrint("gdopool.Return", _dbPoolIdle[dbName].Len(), _dbPoolActive[dbName].Len())
+	// release datasource
+	releaseDataSource(ds)
+	// return 0
 	return err
 }

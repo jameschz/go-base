@@ -2,14 +2,14 @@ package gdocluster
 
 // ShardRange : shard by range
 type ShardRange struct {
-	DbName string
+	DrName string
 	FrNum  int64
 	ToNum  int64
 }
 
-// GetDbName :
-func (s *ShardRange) GetDbName() string {
-	return s.DbName
+// GetDrName :
+func (s *ShardRange) GetDrName() string {
+	return s.DrName
 }
 
 // IsMatch :
@@ -22,13 +22,13 @@ func (s *ShardRange) IsMatch(seqID int64, shardNum int64) bool {
 
 // ShardHash : shard by hush
 type ShardHash struct {
-	DbName string
+	DrName string
 	ModRes int64
 }
 
-// GetDbName :
-func (s *ShardHash) GetDbName() string {
-	return s.DbName
+// GetDrName :
+func (s *ShardHash) GetDrName() string {
+	return s.DrName
 }
 
 // IsMatch :
@@ -42,6 +42,6 @@ func (s *ShardHash) IsMatch(seqID int64, shardNum int64) bool {
 
 // Shard : shard interface
 type Shard interface {
-	GetDbName() string
+	GetDrName() string
 	IsMatch(seqID int64, shardNum int64) bool
 }

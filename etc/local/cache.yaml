@@ -1,9 +1,8 @@
  # pool configs
 _pool: &_pool
-  pool_init_size: 5
-  pool_max_active: 10
-  pool_max_idle: 5
-  pool_min_idle: 0
+  pool_init_size: 10
+  pool_idle_min_size: 5
+  pool_idle_timeout_min: 5
 
 # drivers
 drivers:

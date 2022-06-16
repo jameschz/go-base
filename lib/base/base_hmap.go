@@ -15,6 +15,11 @@ func NewHmap() *Hmap {
 	}
 }
 
+// Data :
+func (h *Hmap) Data() map[string]interface{} {
+	return h.data
+}
+
 // Len :
 func (h *Hmap) Len() int {
 	return h.size

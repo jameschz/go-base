@@ -3,6 +3,7 @@ package gcacheredis
 import (
 	"time"
 
+	"github.com/go-redis/redis"
 	gcachebase "github.com/jameschz/go-base/lib/gcache/base"
 	gcachepool "github.com/jameschz/go-base/lib/gcache/pool"
 )
@@ -84,7 +85,9 @@ func (r *Redis) Get(k string) (string, error) {
 	r.Connect(k)
 	// get kv
 	v, err := r.RedisConn.Get(k).Result()
-	if err != nil {
+	if err == redis.Nil {
+		return "", nil
+	} else if err != nil {
 		return "", err
 	}
 	return v, nil
@@ -100,7 +103,9 @@ func (r *Redis) Del(k string) error {
 	r.Connect(k)
 	// del kv
 	_, err := r.RedisConn.Del(k).Result()
-	if err != nil {
+	if err == redis.Nil {
+		return nil
+	} else if err != nil {
 		return err
 	}
 	return nil
@@ -116,7 +121,9 @@ func (r *Redis) Incr(k string) (int64, error) {
 	r.Connect(k)
 	// get kv
 	v, err := r.RedisConn.Incr(k).Result()
-	if err != nil {
+	if err == redis.Nil {
+		return 0, nil
+	} else if err != nil {
 		return 0, err
 	}
 	return v, nil
@@ -132,8 +139,26 @@ func (r *Redis) IncrBy(k string, val int64) (int64, error) {
 	r.Connect(k)
 	// get kv
 	v, err := r.RedisConn.IncrBy(k, val).Result()
-	if err != nil {
+	if err == redis.Nil {
+		return 0, nil
+	} else if err != nil {
 		return 0, err
 	}
 	return v, nil
+}
+
+// SetNX :
+func (r *Redis) SetNX(k string, v string, exp time.Duration) (bool, error) {
+	// use region key
+	if r.Region != nil {
+		k = r.Region.GetKey(k)
+	}
+	// connect
+	r.Connect(k)
+	// set kv
+	result, err := r.RedisConn.SetNX(k, v, exp).Result()
+	if err != nil {
+		return false, err
+	}
+	return result, nil
 }

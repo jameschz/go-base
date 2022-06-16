@@ -15,7 +15,7 @@ func MysqlQueryBasic() {
 	// print debug info
 	gdopool.SetDebug(true)
 	// init by driver
-	db := gdo.D("demo")
+	db := gdo.D("base")
 	defer db.Close()
 	// init result struct
 	type story struct {
@@ -73,7 +73,7 @@ func MysqlInsertBasic() {
 	// print debug info
 	gdopool.SetDebug(true)
 	// init by driver
-	db := gdo.D("demo")
+	db := gdo.D("base")
 	defer db.Close()
 	// test insert
 	id, err := db.T("story").Insert("title=?,content=?,dtime=?", "title N", "content N", time.Now().Unix())
@@ -89,7 +89,7 @@ func MysqlUpdateBasic() {
 	// print debug info
 	gdopool.SetDebug(true)
 	// init by driver
-	db := gdo.D("demo")
+	db := gdo.D("base")
 	defer db.Close()
 	// test max
 	maxID, _ := db.T("story").Max("id")
@@ -111,7 +111,7 @@ func MysqlDeleteBasic() {
 	// print debug info
 	gdopool.SetDebug(true)
 	// init by driver
-	db := gdo.D("demo")
+	db := gdo.D("base")
 	defer db.Close()
 	// test max
 	maxID, _ := db.T("story").Max("id")
@@ -129,7 +129,7 @@ func MysqlDeleteBasic() {
 // MysqlTxBasic :
 func MysqlTxBasic() {
 	// init by driver
-	db := gdo.D("demo")
+	db := gdo.D("base")
 	defer db.Close()
 	// tx begin
 	db.Begin()
@@ -163,4 +163,145 @@ func MysqlTxBasic() {
 	} else {
 		gutil.Dump("after commit", id)
 	}
+}
+
+// MysqlQueryShard :
+func MysqlQueryShard() {
+	// print debug info
+	gdopool.SetDebug(true)
+	// init by driver
+	db := gdo.C("user")
+	defer db.Close()
+	// init result struct
+	type UserInfo struct {
+		ID    int
+		Name  string
+		Dtime string
+	}
+	// test update (get latest seq id from gb_base.seq_user)
+	maxID := MysqlMaxUserSeqId()
+	// test FetchMaps
+	rows, err := db.T("user_info").Select("id,name,dtime", "id=?", maxID)
+	if err != nil {
+		fmt.Println("> mysql query shard err", err)
+	} else {
+		r, _ := db.T("user_info").FetchMaps(rows)
+		for k, v := range *r {
+			fmt.Println("> mysql query shard : FetchMaps - id :", k)
+			gutil.Dump(v)
+		}
+	}
+	// test FetchMap
+	rows, err = db.T("user_info").Select("id,name,dtime", "id=?", maxID)
+	if err != nil {
+		fmt.Println("> mysql query shard err", err)
+	} else {
+		r, _ := db.T("user_info").FetchMap(rows)
+		fmt.Println("> mysql query shard : FetchMap")
+		gutil.Dump(r)
+	}
+	// test FetchStructs
+	rows, err = db.T("user_info").Select("id,name,dtime", "id=?", maxID)
+	if err != nil {
+		fmt.Println("> mysql query shard err", err)
+	} else {
+		s := &UserInfo{}
+		r, _ := db.T("user_info").FetchStructs(rows, s)
+		for k, v := range *r {
+			fmt.Println("> mysql query shard : FetchStructs - id :", k)
+			gutil.Dump(v.(UserInfo))
+		}
+	}
+	// test FetchStruct
+	rows, err = db.T("user_info").Select("id,name,dtime", "id=?", maxID)
+	if err != nil {
+		fmt.Println("> mysql query shard err", err)
+	} else {
+		s := &UserInfo{}
+		r, _ := db.T("user_info").FetchStruct(rows, s)
+		fmt.Println("> mysql query shard : FetchStruct")
+		gutil.Dump(r.(UserInfo))
+	}
+}
+
+// MysqlInsertShard :
+func MysqlInsertShard() {
+	// print debug info
+	gdopool.SetDebug(true)
+	// init by driver
+	db := gdo.C("user")
+	defer db.Close()
+	// test insert (push seq id to gb_base.seq_user)
+	id, err := db.T("user_info").Insert("id=?,name=?,dtime=?", MysqlUserSeqId(), "Name N", time.Now().Unix())
+	if err != nil {
+		fmt.Println("> mysql insert shard err", err)
+	} else {
+		fmt.Println("> mysql insert shard id", id)
+	}
+}
+
+// MysqlUpdateShard :
+func MysqlUpdateShard() {
+	// print debug info
+	gdopool.SetDebug(true)
+	// init by driver
+	db := gdo.C("user")
+	defer db.Close()
+	// test update (get latest seq id from gb_base.seq_user)
+	maxID := MysqlMaxUserSeqId()
+	if maxID > 0 {
+		// test update
+		name := "name " + strconv.FormatInt(maxID, 10)
+		affect, err := db.T("user_info").Update("name=? where id=?", name, maxID)
+		if err != nil {
+			fmt.Println("> mysql update shard err", err)
+		} else {
+			fmt.Println("> mysql update shard affect", affect)
+		}
+	}
+}
+
+// MysqlDeleteShard :
+func MysqlDeleteShard() {
+	// print debug info
+	gdopool.SetDebug(true)
+	// init by driver
+	db := gdo.C("user")
+	defer db.Close()
+	// test delete (get latest seq id from gb_base.seq_user)
+	maxID := MysqlMaxUserSeqId()
+	if maxID > 0 {
+		// test delete
+		affect, err := db.T("user_info").Delete("id=?", maxID)
+		if err != nil {
+			fmt.Println("> mysql delete shard err", err)
+		} else {
+			fmt.Println("> mysql delete shard affect", affect)
+		}
+	}
+}
+
+func MysqlUserSeqId() int64 {
+	// init by driver
+	db := gdo.D("base")
+	defer db.Close()
+	// test insert
+	id, err := db.T("seq_user").Insert("dtime=?", time.Now().Unix())
+	if err != nil {
+		fmt.Println("> mysql user seq err", err)
+	} else {
+		fmt.Println("> mysql user seq id", id)
+	}
+	// return
+	return int64(id)
+}
+
+func MysqlMaxUserSeqId() int64 {
+	// init by driver
+	db := gdo.D("base")
+	defer db.Close()
+	// test insert
+	maxID, _ := db.T("seq_user").Max("id")
+	// return
+	return int64(maxID)
 }
