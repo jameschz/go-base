@@ -119,7 +119,8 @@ func (db *Mysql) Shard(sqlStr string, params ...interface{}) error {
 		}
 	}
 	// begin tx logic
-	if db.TxBegin == true {
+	// if db.TxBegin == true {
+	if db.TxBegin {
 		tx, err := db.Conn.Begin()
 		if err != nil {
 			return err

@@ -9,6 +9,7 @@ import (
 	base "github.com/jameschz/go-base/lib/base"
 	gcachebase "github.com/jameschz/go-base/lib/gcache/base"
 	gcachedriver "github.com/jameschz/go-base/lib/gcache/driver"
+	gcacheregion "github.com/jameschz/go-base/lib/gcache/region"
 	gutil "github.com/jameschz/go-base/lib/gutil"
 )
 
@@ -20,7 +21,7 @@ var (
 
 // private
 func debugPrint(vals ...interface{}) {
-	if _debugStatus == true {
+	if _debugStatus {
 		gutil.Dump(vals...)
 	}
 }
@@ -91,7 +92,7 @@ func SetDebug(status bool) {
 // Init : public
 func Init() (err error) {
 	// init once
-	if _cPoolInit == true {
+	if _cPoolInit {
 		return nil
 	}
 	// init drivers
@@ -112,6 +113,10 @@ func Init() (err error) {
 			ds.(*gcachebase.DataSource).RedisConn.Ping()
 		}
 	}()
+
+	// init regions
+	gcacheregion.Init()
+
 	// for debug
 	debugPrint("gcachepool.Init", _cPool)
 	// init ok status

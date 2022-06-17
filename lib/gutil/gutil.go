@@ -101,7 +101,8 @@ func GetFileContent(file string) string {
 func CallFunc(fn interface{}, args []interface{}) {
 	// check func type
 	fnType := reflect.TypeOf(fn).String()
-	if strings.Contains(fnType, "func") == false {
+	// if strings.Contains(fnType, "func") == false {
+	if !strings.Contains(fnType, "func") {
 		Throw("CallFunc error: first param expected to be a func")
 	}
 	// fill func args
