@@ -59,6 +59,7 @@ func GetEnv() string {
 	// get from file
 	if len(_baseEnv) == 0 {
 		_baseEnv = GetFileContent(GetRootPath() + "/etc/env.txt")
+		_baseEnv = strings.Trim(_baseEnv, "\n")
 	}
 	// default local
 	if len(_baseEnv) == 0 {
