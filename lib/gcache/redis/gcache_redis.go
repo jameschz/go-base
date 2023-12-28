@@ -162,3 +162,39 @@ func (r *Redis) SetNX(k string, v string, exp time.Duration) (bool, error) {
 	}
 	return result, nil
 }
+
+// TTL :
+func (r *Redis) TTL(k string) (int64, error) {
+	// use region key
+	if r.Region != nil {
+		k = r.Region.GetKey(k)
+	}
+	// connect
+	r.Connect(k)
+	// get kv
+	v, err := r.RedisConn.TTL(k).Result()
+	if err == redis.Nil {
+		return 0, nil
+	} else if err != nil {
+		return 0, err
+	}
+	return int64(v.Seconds()), nil
+}
+
+// Expire :
+func (r *Redis) Expire(k string, expiration time.Duration) (bool, error) {
+	// use region key
+	if r.Region != nil {
+		k = r.Region.GetKey(k)
+	}
+	// connect
+	r.Connect(k)
+	// get kv
+	v, err := r.RedisConn.Expire(k, expiration).Result()
+	if err == redis.Nil {
+		return v, nil
+	} else if err != nil {
+		return v, err
+	}
+	return v, nil
+}
