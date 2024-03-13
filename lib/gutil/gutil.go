@@ -1,6 +1,7 @@
 package gutil
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -11,6 +12,7 @@ import (
 	"runtime/debug"
 	"strings"
 	"time"
+	"unsafe"
 
 	"github.com/bwmarrin/snowflake"
 	uuid "github.com/satori/go.uuid"
@@ -115,6 +117,35 @@ func CallFunc(fn interface{}, args []interface{}) {
 	}
 	// call func with args
 	reflect.ValueOf(fn).Call(as)
+}
+
+/////////////////////////////////////////////////////////////////
+// encrypt funcs
+
+func XOR(bPlain []byte, bKey []byte) []byte {
+	bCipher := make([]byte, len(bPlain))
+	keyLength := len(bKey)
+	for i, k := range bPlain {
+		bCipher[i] = k ^ bKey[i%keyLength]
+	}
+	return bCipher
+}
+
+func EncryptXOR(sPlain string, bKey []byte) string {
+	pPlain := *(*reflect.StringHeader)(unsafe.Pointer(&sPlain))
+	bPlain := *(*[]byte)(unsafe.Pointer(&pPlain))
+	bCipher := XOR(bPlain, bKey)
+	sCipher := base64.StdEncoding.EncodeToString(bCipher)
+	return sCipher
+}
+
+func DecryptXOR(sEncypted string, bKey []byte) string {
+	bEncypted, err := base64.StdEncoding.DecodeString(sEncypted)
+	if err != nil {
+		panic("DecryptXOR base64 decode error")
+	}
+	bDecypted := XOR(bEncypted, bKey)
+	return string(bDecypted)
 }
 
 /////////////////////////////////////////////////////////////////
